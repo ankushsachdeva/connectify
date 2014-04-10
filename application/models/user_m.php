@@ -11,7 +11,7 @@ class User_m extends CI_Model {
     function addUser($fname,$lname,$dob,$email,$username){
       $data = array('fname' => $fname, 'lname' => $lname, 'dob' => $dob, 'email' => $email, 'username' => $username  );
       $this->db->insert('users',$data);
-      //now read circle1id,circle2id and circle3id of the new user and create three new groups, you can use th groups function addGroup()
+      //We can manually mae 3 new groups for the 3 user circles or create a trigger
       if($this->db->affected_rows())
         return true;
       else
