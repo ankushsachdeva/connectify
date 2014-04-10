@@ -1,0 +1,12 @@
+Base URL /connectify/index.php #We'll remove index.php later
+
+Pages
+
+Home(Feed) -> / #redirects to login if not logged in
+Group-> /group/{groupID}
+User Profile-> /user/{userID}
+
+APIs
+SignUp-> /user/signup
+Login-> /user/login
+Add friend-> /user/addfriend
