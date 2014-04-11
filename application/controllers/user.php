@@ -11,7 +11,17 @@ class User extends CI_Controller {
 		$friends = $this->User->getFriends(3);
 		var_dump($friends);
 	}
-
+	public function login(){
+		$username = $this->input->post('username');
+		$password = $this->input->post('password');
+		$check = $this->User->checkLogin($username,$password);
+		if($check == true){
+			redirect('/home','location');
+		}
+		else{
+			redirect('/','location');
+		}
+	}
 	public function signup(){
 		$fname = $this->input->post('fname');
 		$lname = $this->input->post('lname');
