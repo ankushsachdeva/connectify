@@ -40,11 +40,11 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <?if(isset($loggedIn)){?>
-            <li><a href='#'>Profile</a></li>
-            <li><a href='#'>Friends</a></li>
-            <li><a href='#'>Groups</a></li>
-            <li><a href='#'>Sign out</a></li> 
+            <?if(isset($loggedin) && $loggedin != false){?>
+            <li><a href="<?echo site_url('user/profile')?>">Profile</a></li>
+            <li><a href="<?echo site_url('user/friends')?>">Friends</a></li>
+            <li><a href="<?echo site_url('user/group/showall')?>">Groups</a></li>
+            <li><a href='<? echo site_url('user/logout')?>'>Sign out</a></li> 
             <? } else { ?>
             <li data-toggle='modal' data-target='#loginModal' ><a href='#'>Sign in</a></li>
               <?
@@ -64,7 +64,7 @@
           <h1 class="text-center">Login</h1>
       </div>
       <div class="modal-body">
-          <form class="form col-md-12 center-block" action="<? echo site_url('users/login') ?>" method="POST">
+          <form class="form col-md-12 center-block" action="<? echo site_url('user/login') ?>" method="POST">
             <div class="form-group">
               <input type="text" class="form-control input-lg" placeholder="Username" name="username">
             </div>
@@ -77,8 +77,7 @@
           </form>
       </div>
       <div class="modal-footer">
-          <div class="col-md-12">
-          <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+         
       </div>  
       </div>
   </div>

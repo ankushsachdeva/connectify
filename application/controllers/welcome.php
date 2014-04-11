@@ -19,10 +19,15 @@ class Welcome extends CI_Controller {
 	 */
 	public function index()
 	{
-		$this->load->view('header',array('title' => "Welcome to connectify" ));
-		$this->load->view('welcome_message');
-		$this->load->view('footer');
-		
+		if($this->session->userdata('fname')){
+			redirect('/home','location');
+		}
+		else{
+			$this->load->view('header',array('title' => "Welcome to connectify" ));
+			$this->load->view('welcome_message');
+			$this->load->view('footer');
+		}
+
 	}
 }
 

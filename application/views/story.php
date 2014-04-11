@@ -2,7 +2,7 @@
 <div class="row">    
   <br>
   <div class="col-md-2 col-sm-3 text-center">
-    <a class="story-img" href="#"><img src="<?if(isset($image)){echo $image;} else{echo '//placehold.it/100';}?>" style="width:100px;height:100px" class="img-circle"></a>
+    <a class="story-img img-thumbnail" href="<?echo site_url('user/profile/'.$authorid)?>"><img src="<?if(isset($image)){echo $image;} else{echo '//placehold.it/100';}?>" style="width:100px;" ></a>
   </div>
   <div class="col-md-10 col-sm-9">
     <h3><? echo $fname." ".$lname?></h3>
@@ -28,16 +28,18 @@
       <?
         foreach ($comments as $comment) { ?>
           <div class="row">
-            <div class="col-xs-12"><h2><?echo $comment['fname'].' '.$comment['lname'] ?></h2>  </div>
+            <div class="col-xs-10"><h4><?echo $comment['fname'].' '.$comment['lname'] ?></h4>  </div>
+            <div class="col-xs-2"><?echo $comment['time']?></div>
           </div>
           <div class="row">
-            <div class="col-xs-12"><? echo $comment['content'] ?></div>
+            <div class="col-xs-1"></div>
+            <div class="col-xs-11"><? echo $comment['content'] ?></div>
           </div>
         <?
         }
       ?>
         <div class="row">
-          <div class="col-xs-12"><h2>Write a comment</h2>  </div>
+          <div class="col-xs-12"><h4>Write a comment</h4>  </div>
         </div>
         <div class="row">
           <div class="col-xs-12">
@@ -61,8 +63,8 @@
       <div class="modal-body">
          <?foreach ($likes as $like) { ?>
            <div class="row">
-             <div class="col-xs-3"><img class="comment-img" src="<?if(isset($like['image'])){echo $like['image'];} else {echo '//placehold.it/100';}?>" alt=""></div>
-             <div class="col-xs-9"><?echo $like['fname'].' '.$like['lname']?></div>
+             <div class="col-xs-3"><img class="comment-img img-thumbnail" src="<?if(isset($like['image'])){echo $like['image'];} else {echo '//placehold.it/100';}?>" alt=""></div>
+             <div style="margin-top:30px" class="col-xs-9"><a href="<?echo site_url('user/profile/'.$like['userid'])?>"><?echo $like['fname'].' '.$like['lname']?></a></div>
            </div>
            <?
          }?>

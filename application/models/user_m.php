@@ -30,6 +30,13 @@ class User_m extends CI_Model {
     }
     function checkLogin($username, $password){
       //return true or false
+      $this->session->set_userdata('fname','Ankush');
+      $this->session->set_userdata('lname','Sachdeva');
+      $this->session->set_userdata('username','sankush');
+      $this->session->set_userdata('userid',1);
+
+
+      return true;
     }
     function getFeed($userID){
       //return all visible posts to user in any group hes in
