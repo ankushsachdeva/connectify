@@ -9,10 +9,10 @@ class User_m extends CI_Model {
 
     }
 
-    function addUser($fname,$lname,$dob,$email,$username){
-        $data = array('fname' => $fname, 'lname' => $lname, 'dob' => $dob, 'email' => $email, 'username' => $username  );
+    function addUser($fname,$lname,$dob,$gender,$email,$username){
+        $data = array('fname' => $fname, 'lname' => $lname, 'dob' => $dob, 'gender' => $gender, 'email' => $email, 'username' => $username  );
         $this->db->insert('users',$data);
-        //We can manually mae 3 new groups for the 3 user circles or create a trigger
+        
         if($this->db->affected_rows())
             return true;
         else
@@ -63,7 +63,7 @@ class User_m extends CI_Model {
     //just look up friendship table usercircle group? Or do you also need to check all those groups in which both are members (UNION)?
     }
 
-    function updateDetails($fname ,  $lname , $userid , $dob , $gender , $email){
+    function updateDetails($fname ,  $lname , $dob , $gender , $email, $userid){
         $data = array('fname' => $fname, 'lname' => $lname, 'dob' => $dob, 'gender' => $gender, 'email' => $email);
         $this->db->update('users',$data,array('id' => $userid));
         
