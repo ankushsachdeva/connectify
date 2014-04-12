@@ -45,6 +45,9 @@ class User_m extends CI_Model {
       //return numOfItems number of stories that are authored by $userID and visible to $viewerID
     }
     function updateDetails($fname ,  $lname , $username , $dob, $gender, $email){
-      
+
+    }
+    function getDetails($userid){
+      //return user details
     }
 }
