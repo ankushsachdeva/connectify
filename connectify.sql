@@ -30,6 +30,8 @@ CREATE TABLE IF NOT EXISTS `friendship` (
   `user1id` int(11) NOT NULL,
   `user2id` int(11) NOT NULL,
   `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `user1accept` int(11) NOT NULL DEFAULT 0,
+  `user2accept` int(11) NOT NULL DEFAULT 0,
   CHECK (user1id < user2id),
   PRIMARY KEY (`user1id`,`user2id`),
   KEY `user1id` (`user1id`),
