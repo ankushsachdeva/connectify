@@ -52,15 +52,18 @@ CREATE TABLE IF NOT EXISTS `groups` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `group_memebers`
+-- Table structure for table `group_members`
+--
+-- role can be member(0), moderator(1) or admin(2)
 --
 
-CREATE TABLE IF NOT EXISTS `group_memebers` (
+CREATE TABLE IF NOT EXISTS `group_members` (
   `groupID` int(11) NOT NULL,
   `memberID` int(11) NOT NULL,
   `role` int(11) NOT NULL,
   `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  KEY `groupID` (`groupID`)
+  KEY `groupID` (`groupID`),
+  KEY `memberID` (`memberID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -155,11 +158,11 @@ ALTER TABLE `friendship`
   ADD CONSTRAINT `friendship_ibfk_2` FOREIGN KEY (`user2id`) REFERENCES `users` (`id`);
 
 --
--- Constraints for table `group_memebers`
+-- Constraints for table `group_members`
 --
-ALTER TABLE `group_memebers`
-  ADD CONSTRAINT `group_memebers_ibfk_1` FOREIGN KEY (`groupID`) REFERENCES `groups` (`id`);
-
+ALTER TABLE `group_members`
+  ADD CONSTRAINT `group_members_ibfk_1` FOREIGN KEY (`groupID`) REFERENCES `groups` (`id`),
+  ADD CONSTRAINT `group_members_ibfk_2` FOREIGN KEY (`memberID`) REFERENCES `users` (`id`);
 --
 -- Constraints for table `group_posts`
 --
