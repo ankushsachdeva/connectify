@@ -21,4 +21,7 @@ class Group_m extends CI_Model {
     function changeRole($userid, $groupid, $newRole){
         
     }
+    function getAdmins($groupID){
+        
+    }
 }

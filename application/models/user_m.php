@@ -44,4 +44,7 @@ class User_m extends CI_Model {
     function getFeedVisibleToSomeone($userID, $viewerID, $numOfItems){
       //return numOfItems number of stories that are authored by $userID and visible to $viewerID
     }
+    function updateDetails($fname ,  $lname , $username , $dob, $gender, $email){
+      
+    }
 }

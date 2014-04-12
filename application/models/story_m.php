@@ -32,4 +32,10 @@ class Story_m extends CI_Model {
       $res = $this->db->query($query);
       return $res->result();
     }
+    function deleteStory($storyid){
+
+    }
+    function getGroup($storyid){
+      // returns the group in which this story is
+    }
 }
