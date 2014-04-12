@@ -19,7 +19,7 @@ class User extends MY_Controller {
 			redirect('/home','location');
 		}
 		else{
-			redirect('/','location');
+			redirect('/#failed','location');
 		}
 	}
 	public function logout(){
@@ -34,7 +34,7 @@ class User extends MY_Controller {
 		$username = $this->input->post('username');
 		$res = $this->User->addUser($fname,$lname,$dob,$email,$username);
 		if(!$res){
-			echo "Failed";
+			redirect('/#failed','location');
 		}
 		else{
 			redirect('/','location');

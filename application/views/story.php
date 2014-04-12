@@ -12,8 +12,8 @@
          <!-- <p class="lead"><button class="btn btn-default">Read More</button></p> -->
           <ul class="list-inline">
             <li><? echo $time?></li>
-            <li class="hand-crs" data-toggle='modal' data-target='#likesModal<? if($numLikes>0){echo $id;}?>'><i class="glyphicon glyphicon-thumbs-up"></i> <?echo $numLikes?> Likes</li>
-            <li class="hand-crs" <? if(isset($numComments)){?>onclick="showComments(<?echo $id;?>)"<?}?> > <? if(isset($numComments)){?> <?}?><i class="glyphicon glyphicon-comment"></i> <? echo $numComments?> Comments
+            <li class="hand-crs" data-toggle='modal' data-target='#likesModal<? if($numLikes>0){echo $storyid;}?>'><i class="glyphicon glyphicon-thumbs-up"></i> <?echo $numLikes?> Likes</li>
+            <li class="hand-crs" <? if(isset($numComments)){?>onclick="showComments(<?echo $storyid;?>)"<?}?> > <? if(isset($numComments)){?> <?}?><i class="glyphicon glyphicon-comment"></i> <? echo $numComments?> Comments
             </li>
           </ul>
         </div>
@@ -22,7 +22,7 @@
       <br><br>
     </div>
   </div>
-  <div class="row comments comments<? echo $id?>">
+  <div class="row comments comments<? echo $storyid?>">
     <div class="col-xs-2"></div>
     <div class="col-xs-9 well well-sm">
       <?
@@ -53,7 +53,7 @@
     </div>
   </div>
   <hr>
-  <div id="likesModal<? echo $id?>" class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div id="likesModal<? echo $storyid?>" class="modal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
   <div class="modal-content">
       <div class="modal-header">

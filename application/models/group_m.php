@@ -18,4 +18,7 @@ class Group_m extends CI_Model {
     function getStories($groupID){
       
     }
+    function changeRole($userid, $groupid, $newRole){
+        
+    }
 }

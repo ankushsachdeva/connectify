@@ -13,12 +13,18 @@
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="<?php echo base_url('assets/js/bootstrap.min.js')?>"></script>
     <script src="<?php echo base_url('assets/js/bootstrap-datepicker.js')?>"></script>
+    <script type="text/javascript" src="<?php echo base_url('assets/js/bootstrap-multiselect.js')?>"></script>
 	<script>
-		$('.bday').datepicker()
+		 $(document).ready(function() {
+			$('.multiselect').multiselect();
+			$('.bday').datepicker();
+			$(location.hash).show();
+
+		});
 		function showComments($id){
 			$(".comments"+$id).toggle(function() {
     		return false;
-		});
+			});
 		}
 	</script>
   </body>
