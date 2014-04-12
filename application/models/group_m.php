@@ -35,4 +35,10 @@ class Group_m extends CI_Model {
     function getStories($groupID){
     //join group members with stories  
     }
+    function changeRole($userid, $groupid, $newRole){
+        
+    }
+    function getAdmins($groupID){
+        
+    }
 }

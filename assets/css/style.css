@@ -188,3 +188,8 @@ p.copyright {
 .frow{
   padding-top:30px;
 }
+.fixed-top{
+  position: absolute;
+  top:50px;
+  width: 100%;
+}

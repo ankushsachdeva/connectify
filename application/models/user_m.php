@@ -41,4 +41,13 @@ class User_m extends CI_Model {
     function getFeed($userID){
       //return all visible posts to user in any group hes in
     }
+    function getFeedVisibleToSomeone($userID, $viewerID, $numOfItems){
+      //return numOfItems number of stories that are authored by $userID and visible to $viewerID
+    }
+    function updateDetails($fname ,  $lname , $username , $dob, $gender, $email){
+
+    }
+    function getDetails($userid){
+      //return user details
+    }
 }

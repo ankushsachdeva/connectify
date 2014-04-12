@@ -17,7 +17,7 @@
 
     <!-- siimple style -->
     <link href="<?php echo base_url('assets/css/style.css')?>" rel="stylesheet">
-    
+    <link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap-multiselect.css')?>" type="text/css"/>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -43,7 +43,7 @@
             <?if(isset($loggedin) && $loggedin != false){?>
             <li><a href="<?echo site_url('user/profile')?>">Profile</a></li>
             <li><a href="<?echo site_url('user/friends')?>">Friends</a></li>
-            <li><a href="<?echo site_url('user/group/showall')?>">Groups</a></li>
+            <li><a href="<?echo site_url('group/showall')?>">Groups</a></li>
             <li><a href='<? echo site_url('user/logout')?>'>Sign out</a></li> 
             <? } else { ?>
             <li data-toggle='modal' data-target='#loginModal' ><a href='#'>Sign in</a></li>
@@ -54,6 +54,14 @@
           </ul>
         </div><!--/.nav-collapse -->
       </div>
+    </div>
+    <div class="alert alert-success alert-dismissable fixed-top" id="success" style="display:none">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      <strong>Success!</strong> .
+    </div>
+    <div class="alert alert-danger alert-dismissable fixed-top" id="failed" style="display:none">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      <strong>Failed!</strong> .
     </div>
 
     <div id="loginModal" class="modal" tabindex="-1" role="dialog" aria-hidden="true">
