@@ -32,8 +32,12 @@ CREATE TABLE IF NOT EXISTS `friendship` (
   `user1circle` int(11) NOT NULL,
   `user2circle` int(11) NOT NULL,
   `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CHECK (user1id < user2id),
+  PRIMARY KEY (`user1id`,`user2id`),
   KEY `user1id` (`user1id`),
-  KEY `user2id` (`user2id`)
+  KEY `user2id` (`user2id`),
+  KEY `user1circle` (`user1circle`),
+  KEY `user2circle` (`user2circle`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -62,6 +66,7 @@ CREATE TABLE IF NOT EXISTS `group_members` (
   `memberID` int(11) NOT NULL,
   `role` int(11) NOT NULL,
   `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`groupID`,`memberID`),
   KEY `groupID` (`groupID`),
   KEY `memberID` (`memberID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -75,6 +80,7 @@ CREATE TABLE IF NOT EXISTS `group_members` (
 CREATE TABLE IF NOT EXISTS `group_posts` (
   `storyid` int(11) NOT NULL,
   `groupid` int(11) NOT NULL,
+  PRIMARY KEY (`storyid`,`groupid`),
   KEY `storyid` (`storyid`),
   KEY `groupid` (`groupid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -128,6 +134,8 @@ CREATE TABLE IF NOT EXISTS `story_likes` (
 --
 -- Table structure for table `users`
 --
+-- Remeber to encrypt passwords
+--
 
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -140,6 +148,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `circle1id` int(11) NOT NULL DEFAULT 0,
   `circle2id` int(11) NOT NULL DEFAULT 0,
   `circle3id` int(11) NOT NULL DEFAULT 0,
+  `passwd` varchar(25) NOT NULL,
   `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
@@ -155,7 +164,9 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 ALTER TABLE `friendship`
   ADD CONSTRAINT `friendship_ibfk_1` FOREIGN KEY (`user1id`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `friendship_ibfk_2` FOREIGN KEY (`user2id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `friendship_ibfk_2` FOREIGN KEY (`user2id`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `friendship_ibfk_3` FOREIGN KEY (`user1circle`) REFERENCES `groups` (`id`),
+  ADD CONSTRAINT `friendship_ibfk_4` FOREIGN KEY (`user2circle`) REFERENCES `groups` (`id`);
 
 --
 -- Constraints for table `group_members`
