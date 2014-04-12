@@ -29,15 +29,11 @@ SET time_zone = "+00:00";
 CREATE TABLE IF NOT EXISTS `friendship` (
   `user1id` int(11) NOT NULL,
   `user2id` int(11) NOT NULL,
-  `user1circle` int(11) NOT NULL,
-  `user2circle` int(11) NOT NULL,
   `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CHECK (user1id < user2id),
   PRIMARY KEY (`user1id`,`user2id`),
   KEY `user1id` (`user1id`),
-  KEY `user2id` (`user2id`),
-  KEY `user1circle` (`user1circle`),
-  KEY `user2circle` (`user2circle`)
+  KEY `user2id` (`user2id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -145,11 +141,9 @@ CREATE TABLE IF NOT EXISTS `users` (
   `dob` date NOT NULL,
   `gender` int(11) NOT NULL DEFAULT '1',
   `email` varchar(25) NOT NULL,
-  `circle1id` int(11) NOT NULL DEFAULT 0,
-  `circle2id` int(11) NOT NULL DEFAULT 0,
-  `circle3id` int(11) NOT NULL DEFAULT 0,
   `passwd` varchar(25) NOT NULL,
   `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `image` varchar(30) NOT NULL DEFAULT "//placehold.it/200",
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`)
@@ -164,9 +158,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 ALTER TABLE `friendship`
   ADD CONSTRAINT `friendship_ibfk_1` FOREIGN KEY (`user1id`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `friendship_ibfk_2` FOREIGN KEY (`user2id`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `friendship_ibfk_3` FOREIGN KEY (`user1circle`) REFERENCES `groups` (`id`),
-  ADD CONSTRAINT `friendship_ibfk_4` FOREIGN KEY (`user2circle`) REFERENCES `groups` (`id`);
+  ADD CONSTRAINT `friendship_ibfk_2` FOREIGN KEY (`user2id`) REFERENCES `users` (`id`);
 
 --
 -- Constraints for table `group_members`
