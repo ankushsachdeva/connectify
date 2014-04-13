@@ -101,7 +101,9 @@ class User_m extends CI_Model {
         }
         
     }
+    function checkIfFriends($user1id, $user2id){
 
+    }
     function getFeed($userID){
     //return all visible posts to user, that is, posts in all groups that he is in
     //also need to return the comments and likes associated with each of the stories
@@ -110,6 +112,7 @@ class User_m extends CI_Model {
         $res = $this->db->query($query);
         return $res->result();
     }
+
 
     function getFeedVisibleToSomeone($userID, $viewerID, $numOfItems){
     //essentially what is seen by the viewer on opening the profile page of a user
@@ -140,5 +143,9 @@ class User_m extends CI_Model {
         $query = "SELECT * FROM users WHERE id = $userid";
         $res = $this->db->query($query);
         return $res->result();
+    }
+
+    function search($fname, $lname, $fromDOB, $toDOB, $gender){
+        //all are substring search, fromDOB-toDOB is the range of DOB
     }
 }

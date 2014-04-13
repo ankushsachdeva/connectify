@@ -41,6 +41,8 @@
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             <?if(isset($loggedin) && $loggedin != false){?>
+            <li><a href="<?echo site_url('user/search')?>">Search</a></li>
+            <li><a href="<?echo site_url('user/pendingrequests')?>">Requests</a></li>
             <li><a href="<?echo site_url('user/profile')?>">Profile</a></li>
             <li><a href="<?echo site_url('user/friends')?>">Friends</a></li>
             <li><a href="<?echo site_url('group/showall')?>">Groups</a></li>
@@ -55,13 +57,13 @@
         </div><!--/.nav-collapse -->
       </div>
     </div>
-    <div class="alert alert-success alert-dismissable fixed-top" id="success" style="display:none">
+    <div class="alert alert-success alert-dismissable fixed-top" id="success" style="display:none; z-index:100">
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
       <strong>Success!</strong> .
     </div>
-    <div class="alert alert-danger alert-dismissable fixed-top" id="failed" style="display:none">
+    <div class="alert alert-danger alert-dismissable fixed-top" id="failed" style="display:none; z-index:100"> 
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-      <strong>Failed!</strong> .
+      <strong>Something went wrong!</strong> .
     </div>
 
     <div id="loginModal" class="modal" tabindex="-1" role="dialog" aria-hidden="true">

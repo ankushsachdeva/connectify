@@ -14,8 +14,33 @@ class Story extends MY_Controller {
 		$this->isLoggedin();
 		$storyid= $this->input->post('storyid');
 		$content = $this->input->post('content');
-		// $this->Story->addComment()
-	}
+		$authorid = $this->session->userdata('userid');
+		$res = $this->Story->addComment($authorid, $storyid, $content);
+		if($res)
+			redirect($this->agent->referrer().'#success');
+		else
+			redirect($this->agent->referrer().'#failed');
 
+	}
+	public function deleteStory(){
+		$this->isLoggedin();
+		$storyid= $this->input->post('storyid');
+		$res = $this->Story->deleteStroy($storyid);
+		if($res)
+			redirect($this->agent->referrer().'#success');
+		else
+			redirect($this->agent->referrer().'#failed');
+	}
+	public function add(){
+		$this->isLoggedin();
+		$content = $this->input->post('content');
+		$groupid = $this->input->post('groupid');
+		$authorid = $this->session->userdata('userid');
+		$res = $this->Story->addStory($authorid, $content, $groupid);
+		if($res)
+			redirect('group/show/'.$groupid.'#success');
+		else
+			redirect('group/show/'.$groupid.'#failed');
+	}
 	
 }

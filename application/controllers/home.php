@@ -19,7 +19,7 @@ class Home extends MY_Controller {
 				true);
 			array_push($stories, $story);
 		}
-		$this->load->view('home', array('stories' => $stories, 'fname' => 'Ankush'));
+		$this->load->view('home', array('stories' => $stories, 'fname' => 'Ankush', 'session'=>$this->session->all_userdata()));
 		$this->load->view('footer');
 
 	}

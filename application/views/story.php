@@ -5,7 +5,7 @@
     <a class="story-img img-thumbnail" href="<?echo site_url('user/profile/'.$authorid)?>"><img src="<?if(isset($image)){echo $image;} else{echo '//placehold.it/100';}?>" style="width:100px;" ></a>
   </div>
   <div class="col-md-10 col-sm-9">
-    <h3><? echo $fname." ".$lname?></h3>
+    <h3><? echo $fname." ".$lname?></h3><?if($session['userid'] == $authorid){?><div class="pull-right"><form method ="post" action="<?echo site_url('story/delete')?>"><input type="hidden" name="storyid" value="<?echo $storyid?>"> <button type="submit">Delete</button></form></div><?}?>
     <div class="row">
       <div class="col-xs-9">
         <p><? echo $content?></p>
@@ -28,7 +28,9 @@
       <?
         foreach ($comments as $comment) { ?>
           <div class="row">
-            <div class="col-xs-10"><h4><?echo $comment['fname'].' '.$comment['lname'] ?></h4>  </div>
+            <div class="col-xs-6"><h4><?echo $comment['fname'].' '.$comment['lname'] ?></h4>  </div>
+            <?if($session['userid'] == $comment['authorid']){?><div class="col-xs-4"><form method ="post" action="<?echo site_url('story/deletecomment')?>"><input type="hidden" name="commentid" value="<?echo $comment['commentid']?>"> <button type="submit">Delete</button></form></div><?}?>
+
             <div class="col-xs-2"><?echo $comment['time']?></div>
           </div>
           <div class="row">
