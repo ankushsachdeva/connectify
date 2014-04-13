@@ -11,7 +11,7 @@ class Test extends CI_Controller {
 	}
 	public function index()
 	{
-		var_dump($this->Story->deleteStory(2));
+		var_dump($this->Story->deleteStory(1));
 	}
 
 	

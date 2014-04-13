@@ -7,6 +7,7 @@ class Story_m extends CI_Model {
         parent::__construct();
     }
 
+    //TRANSACTION NEEDED - BUT HOW TO GET ID OF INSERTED STORY?
     function addStory($authorID, $content, $groupID){
     //add to stories table
     //add to group_posts table using auto generated story id
@@ -26,11 +27,20 @@ class Story_m extends CI_Model {
             return false;
     }
 
-    function addComment($authorID, $storyID, $comment ){
-    // return true/false
-    //authorID is the id of the user who wrote the comment
-        $data = array('storyid' => $storyID, 'userid' => $authorID, 'comment' => $comment);
-        $this->db->insert('story_comments',$data);
+    function addComment($authorID, $storyID, $comment){
+    // return true if the comment was successfully added, false otherwise
+        $data = array('storyid' => $storyID, 'authorid' => $authorID, 'content' => $comment);
+        $this->db->insert('comments',$data);
+        
+        if($this->db->affected_rows())
+            return true;
+        else
+            return false;
+    }
+
+    function deleteComment($commentID){
+    //Returns true if the comment was successfully deleted, false otherwise
+        $this->db->delete('comments', array('id' => $commentID));
         
         if($this->db->affected_rows())
             return true;
@@ -66,21 +76,22 @@ class Story_m extends CI_Model {
     //     return $res->result();
     // }
 
+    //TRANSACTION NEEDED
     function deleteStory($storyid){
     //remove story and all related data from stories, group_posts, story_likes and story_comments
-        
+
         $this->db->delete('group_posts', array('storyid' => $storyid));
-        $temp2 = $this->db->affected_rows();
+        $temp1 = $this->db->affected_rows();
 
         $this->db->delete('story_likes', array('storyid' => $storyid));
-        $temp3 = $this->db->affected_rows();
+        $temp2 = $this->db->affected_rows();
 
-        $this->db->delete('story_comments', array('storyid' => $storyid));
-        $temp4 = $this->db->affected_rows();        
+        $this->db->delete('comments', array('storyid' => $storyid));
+        $temp3 = $this->db->affected_rows();        
 
         //delete this entry in the end due to foreign key contraints
         $this->db->delete('stories', array('id' => $storyid));
-        $temp1 = $this->db->affected_rows();
+        $temp4 = $this->db->affected_rows();
 
         //HOW TO CHECK WHETHER ALL LIKES AND COMMENTS WERE DELETED?
         //there may be no likes or comments (temp3 = 0 or temp4 = 0)

@@ -10,12 +10,13 @@ class User_m extends CI_Model {
     }
 
     function addUser($fname,$lname,$username,$dob,$gender,$email,$password){
-    //return true of false
+    //return true if record is inserted, false otherwise (for example if constraints are not satisfied)
+
         $data = array('fname' => $fname, 'lname' => $lname, 'username' => $username, 'dob' => $dob, 'gender' => $gender, 'email' => $email, 'passwd' => $password);
         $this->db->insert('users',$data);
         
         if($this->db->affected_rows())
-            return true;
+             return true;
         else
             return false;
     }
@@ -33,10 +34,11 @@ class User_m extends CI_Model {
     function addFriend($userID, $friendID){
     // keep in mind $user1id < $user2id in friendship
     // check whether $friendID has already sent a friend request to userID
+
         if ($userID < $friendID) {
-            //query database for record
-            //if record is present, update
-            //if record is not present, insert
+            //query database for record corresponding to these two users
+            //if record is present, update this record
+            //if record is not present, insert this record
             $query = "SELECT * FROM friendship WHERE user1id = $userID and user2id = $friendID";
             $res = $this->db->query($query);
             $temp = $res->result();
@@ -79,7 +81,7 @@ class User_m extends CI_Model {
             } else {
                 //record is present in the table => update
                 $data = array('user2accept' => 1);
-                $this->db->update('friendship',$data,array('user2id' => $friendID));
+                $this->db->update('friendship',$data,array('user1id' => $friendID));
 
                 if($this->db->affected_rows())
                     return true;
@@ -91,24 +93,43 @@ class User_m extends CI_Model {
 
     function checkLogin($username, $password){
     //return true if username and password match, false otherwise
-        $query = "SELECT passwd FROM users WHERE username = $username";
+        $query = "SELECT * FROM users WHERE username = \"$username\" and passwd = \"$password\"";
         $res = $this->db->query($query);
         $temp = $res->result();
-        if ($temp['passwd'] == $password) {
+
+        if (count($temp) > 0) {
+            return true;
+        } else {
+            return false;
+        }
+        
+            
+        
+    }
+
+    function checkIfFriends($user1id, $user2id){
+    //return true if the two users are friends, false otherwise
+        if ($user1id < $user2id) {
+            $query = "SELECT * FROM friendship WHERE user1id = $user1id and user2id = $user2id and user1accept = 1 and user2accept = 1";
+        } else {
+            $query = "SELECT * FROM friendship WHERE user1id = $user2id and user2id = $user1id and user1accept = 1 and user2accept = 1";
+        }
+        
+        $res = $this->db->query($query);
+        $temp = $res->result();
+        if (count($temp) > 0) {
+            //There exists a record indicating that the two users are friends
             return true;
         } else {
             return false;
         }
         
     }
-    function checkIfFriends($user1id, $user2id){
-
-    }
     function getFeed($userID){
     //return all visible posts to user, that is, posts in all groups that he is in
     //also need to return the comments and likes associated with each of the stories
         $subquery = "SELECT groupID FROM group_members WHERE memberID = $userID";
-        $query = "SELECT * FROM group_posts,stories,story_likes,comments WHERE stories.id = story_likes.storyid and stories.id = comments.storyid and stories.id = group_posts.storyid and group_posts.groupid in ($subquery) ORDER BY stories.time DESC";
+        $query = "SELECT * FROM group_posts,stories WHERE stories.id = group_posts.storyid and group_posts.groupid in ($subquery) ORDER BY stories.time DESC";
         $res = $this->db->query($query);
         return $res->result();
     }
@@ -117,12 +138,11 @@ class User_m extends CI_Model {
     function getFeedVisibleToSomeone($userID, $viewerID, $numOfItems){
     //essentially what is seen by the viewer on opening the profile page of a user
     //return $numOfItems number of stories that are authored by $userID and visible to $viewerID
-    //by visible we mean stories posted in all mutual groups
-    //also display all likes and comment details associated with each story (sorted chronologically backwards)
+    //by visible we mean stories posted in all mutual groups (display in chronologically backwards order)
         $subquery1 = "SELECT groupID from group_members where memberID = $userID";
         $subquery2 = "SELECT groupID from group_members where memberID = $viewerID";
-        $subquery = "$subquery1 INTERSECT $subquery2";  //all common groups 
-        $query = "SELECT * FROM group_posts,stories,story_likes,comments WHERE stories.id = story_likes.storyid and stories.id = comments.storyid and stories.id = group_posts.storyid and group_posts.groupid in ($subquery) ORDER BY stories.time DESC LIMIT $numOfItems";
+        $subquery = "($subquery1) INTERSECT ($subquery2)";  //all common groups 
+        $query = "SELECT * FROM group_posts,stories WHERE stories.id = group_posts.storyid and group_posts.groupid in ($subquery) LIMIT $numOfItems ORDER BY time DESC";
 
         $res = $this->db->query($query);
         return $res->result();   
@@ -145,7 +165,11 @@ class User_m extends CI_Model {
         return $res->result();
     }
 
+    //All DB operations are reads - NO TRANSACTIONS NEEDED
     function search($fname, $lname, $fromDOB, $toDOB, $gender){
-        //all are substring search, fromDOB-toDOB is the range of DOB
+    //all are substring search, fromDOB-toDOB is the range of DOB
+        $query = "SELECT * FROM users WHERE (fname like $fname) or (lname like $lname) or (gender = $gender) or (dob between $fromDOB and $toDOB) or ";
+        $res = $this->db->query($query);
+        return $res->result();       
     }
 }

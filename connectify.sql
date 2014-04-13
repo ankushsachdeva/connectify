@@ -115,6 +115,7 @@ CREATE TABLE IF NOT EXISTS `story_likes` (
   `storyid` int(11) NOT NULL,
   `userid` int(11) NOT NULL,
   `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`storyid`,`userid`),
   KEY `storyid` (`storyid`),
   KEY `userid` (`userid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;

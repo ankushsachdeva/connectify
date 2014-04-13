@@ -8,7 +8,9 @@ class Group_m extends CI_Model {
     }
 
     function addGroup($authorID,$groupName){
-      //return true iff new group is created and author is successfully added as admin
+    //return true iff new group is created and author is successfully added as admin
+    //assumes that a single user is allowed to create multiple groups having the same name
+
     	$data = array('name' => $groupName);
     	$this->db->insert('groups',$data);
     	$temp1 = $this->db->affected_rows();
@@ -24,10 +26,11 @@ class Group_m extends CI_Model {
         	return false; 
     }
 
-    function addMember($groupID, $memberIDs, $roles){
+    function addMembers($groupID, $memberIDs, $roles){
     //$memberIDs is an array of new member IDs, $roles is an array of roles (of the same size)
     //assumes both of the above arrays are indexed from 0
-    	$len = count($memberIDs);
+    	
+        $len = count($memberIDs);
     	$temp = 0;
     	if ($len == count($roles)) {
     		for ($i = 0; $i < $len; $i++) { 
@@ -55,7 +58,7 @@ class Group_m extends CI_Model {
     //join group_posts with stories to return all story details 
     //sort stories chronologically backwards
     //also get the likes and comments details associated with each story
-    	$query = "SELECT * FROM group_posts,stories,story_likes,comments WHERE stories.id = story_likes.storyid and stories.id = comments.storyid and stories.id = group_posts.storyid and group_posts.groupid = $groupID ORDER BY stories.time DESC";
+    	$query = "SELECT * FROM group_posts,stories WHERE stories.id = group_posts.storyid and group_posts.groupid = $groupID ORDER BY stories.time DESC";
     	$res = $this->db->query($query);
    	   	return $res->result();  
     }
