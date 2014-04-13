@@ -72,7 +72,7 @@
           <h1 class="text-center">Login</h1>
       </div>
       <div class="modal-body">
-          <form class="form col-md-12 center-block" action="<? echo site_url('user/login') ?>" method="POST">
+          <form class="form col-md-12 center-block" action="<?php echo site_url('user/login') ?>" method="POST">
             <div class="form-group">
               <input type="text" class="form-control input-lg" placeholder="Username" name="username">
             </div>
