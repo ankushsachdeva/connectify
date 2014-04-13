@@ -23,7 +23,7 @@ class Group extends MY_Controller {
 				true);
 			array_push($stories, $story);
 		}
-		$this->load->view('group', array('stories' => $stories, 'name' => 'Family Circle'));
+		$this->load->view('group', array('stories' => $stories, 'name' => 'Family Circle', 'groupid' => 1 ));
 		$this->load->view('footer');
 
 	}
@@ -40,19 +40,20 @@ class Group extends MY_Controller {
 				  		array('name' => "Family", 'time'=>'1 month ago' ,'iamadmin' => false, 'groupid' =>2,
 						 'members' => array(array('fname' => "Anushka", 'lname' => 'Sharma', 'userid' => 1,'time'=>'13th July 1993', 'role' =>0 ),
 				  							array('fname' => "Anushka", 'lname' => 'Sharma', 'userid' => 1,'time'=>'3rd July 1993', 'role' =>0 ) ) ) );
-		$this->load->view('group_list', array('groups' => $groups ,
-			'friends' => array(array('fname' => "Scarlett", 'lname' => 'Johnson', 'userid' =>1) )));
+		$this->load->view('group_list', array('groups' => $groups , "session" => $this->session->all_userdata(),
+			'friends' => array(array('fname' => "Scarlett", 'lname' => 'Johnson', 'userid' =>2) )));
 		$this->load->view('footer');
 
 	}
 	public function addmember(){
 		$memberIDs = $this->input->post('memberIDs');
 		$groupID = $this->input->post('groupid');
-		$res = $this->Group->addMember($groupID, $memberIDs);
+		$roles = array_fill(0, count($memberIDs), 0);
+		$res = $this->Group->addMember($groupID, $memberIDs, $roles);
 		if($res)
-			redirect('group/showall#success');
+			redirect($this->agent->referrer().'#success');
 		else
-			redirect('group/showall#failed');
+			redirect($this->agent->referrer().'#failed');
 
 	}
 	public function changerole(){
@@ -60,6 +61,16 @@ class Group extends MY_Controller {
 		$userid = $this->input->post('userid');
 		$groupid = $this->input->post('groupid');
 		$res = $this->Group->changeRole($userid, $groupid, $newRole);
+		if($res)
+			redirect('group/showall#success');
+		else
+			redirect('group/showall#failed');
+	}
+	public function add(){
+		$this->isLoggedin();
+		$name = $this->input->post('name');
+		$authorid = $this->session->userdata('userid');
+		$res = $this->Group->addGroup($authorid, $name);
 		if($res)
 			redirect('group/showall#success');
 		else

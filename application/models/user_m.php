@@ -50,13 +50,16 @@ class User_m extends CI_Model {
 
         return true;
     }
+    function checkIfFriends($user1id, $user2id){
 
+    }
     function getFeed($userID){
     //return all visible posts to user in any group hes in
         $query = "SELECT * FROM group_posts,stories WHERE group_posts.storyid = stories.id and group_posts.groupid in (SELECT groupID FROM group_members WHERE memberID = $userID)";
         $res = $this->db->query($query);
         return $res->result();
     }
+
 
     function getFeedVisibleToSomeone($userID, $viewerID, $numOfItems){
     //return numOfItems number of stories that are authored by $userID and visible to $viewerID
@@ -78,5 +81,9 @@ class User_m extends CI_Model {
         $query = "SELECT * FROM users WHERE id = $userid";
         $res = $this->db->query($query);
         return $res->result();
+    }
+
+    function search($fname, $lname, $fromDOB, $toDOB, $gender){
+        //all are substring search, fromDOB-toDOB is the range of DOB
     }
 }
