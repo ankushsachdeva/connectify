@@ -5,7 +5,7 @@
     <a class="story-img img-thumbnail" href="<?echo site_url('user/profile/'.$authorid)?>"><img src="<?if(isset($image)){echo $image;} else{echo '//placehold.it/100';}?>" style="width:100px;" ></a>
   </div>
   <div class="col-md-10 col-sm-9">
-    <h3><? echo $fname." ".$lname?></h3>
+    <h3><? echo $fname." ".$lname?></h3><div class="pull-right">Delete</div>
     <div class="row">
       <div class="col-xs-9">
         <p><? echo $content?></p>

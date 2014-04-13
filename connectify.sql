@@ -38,6 +38,8 @@ CREATE TABLE IF NOT EXISTS `friendship` (
   KEY `user2id` (`user2id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+
+
 -- --------------------------------------------------------
 
 --
@@ -100,20 +102,8 @@ CREATE TABLE IF NOT EXISTS `stories` (
 
 -- --------------------------------------------------------
 
---
--- Table structure for table `story_comments`
---
 
-CREATE TABLE IF NOT EXISTS `story_comments` (
-  `storyid` int(11) NOT NULL,
-  `userid` int(11) NOT NULL,
-  `comment` text NOT NULL,
-  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  KEY `storyid` (`storyid`),
-  KEY `userid` (`userid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
 
 --
 -- Table structure for table `story_likes`
@@ -152,12 +142,39 @@ CREATE TABLE IF NOT EXISTS `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `comments`
+--
+
+CREATE TABLE IF NOT EXISTS `comments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `content` TEXT NOT NULL,
+  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `authorid` int(11) NOT NULL,  
+  `storyid` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `authorid` (`authorid`),
+  KEY `storyid` (`storyid`)
+
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+
+
 -- Constraints for dumped tables
 --
 
 --
 -- Constraints for table `friendship`
 --
+
+ALTER TABLE `comments`
+  ADD CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`authorid`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`storyid`) REFERENCES `stories` (`id`);
+
+
+
 ALTER TABLE `friendship`
   ADD CONSTRAINT `friendship_ibfk_1` FOREIGN KEY (`user1id`) REFERENCES `users` (`id`),
   ADD CONSTRAINT `friendship_ibfk_2` FOREIGN KEY (`user2id`) REFERENCES `users` (`id`);
@@ -181,12 +198,6 @@ ALTER TABLE `group_posts`
 ALTER TABLE `stories`
   ADD CONSTRAINT `stories_ibfk_1` FOREIGN KEY (`authorid`) REFERENCES `users` (`id`);
 
---
--- Constraints for table `story_comments`
---
-ALTER TABLE `story_comments`
-  ADD CONSTRAINT `story_comments_ibfk_1` FOREIGN KEY (`storyid`) REFERENCES `stories` (`id`),
-  ADD CONSTRAINT `story_comments_ibfk_2` FOREIGN KEY (`userid`) REFERENCES `users` (`id`);
 
 --
 -- Constraints for table `story_likes`
