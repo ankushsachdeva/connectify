@@ -51,24 +51,24 @@ class Story_m extends CI_Model {
             return false;  
     }
 
-    //Shows how to get data from db using Active Record queries
-    function getLikes($storyID){
-    //return an array
-        $this->db->select('userid,  time')->where('storyid',$storyID)->from('story_likes');
-        return $this->db->get()->result();
-    }
+    // //Shows how to get data from db using Active Record queries
+    // function getLikes($storyID){
+    // //return an array
+    //     $this->db->select('userid,  time')->where('storyid',$storyID)->from('story_likes');
+    //     return $this->db->get()->result();
+    // }
 
-    //Shows how to get data from db using simple queries
-    function getComments($storyID){
-    //return an array
-        $query = "SELECT userid, comment, time FROM story_comments WHERE storyid = $storyID";
-        $res = $this->db->query($query);
-        return $res->result();
-    }
+    // //Shows how to get data from db using simple queries
+    // function getComments($storyID){
+    // //return an array
+    //     $query = "SELECT userid, comment, time FROM story_comments WHERE storyid = $storyID";
+    //     $res = $this->db->query($query);
+    //     return $res->result();
+    // }
 
     function deleteStory($storyid){
     //remove story and all related data from stories, group_posts, story_likes and story_comments
-  
+        
         $this->db->delete('group_posts', array('storyid' => $storyid));
         $temp2 = $this->db->affected_rows();
 
