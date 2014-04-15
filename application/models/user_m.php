@@ -31,6 +31,15 @@ class User_m extends CI_Model {
         return $res->result();
     }
 
+    function getFriendRequests($userID){ 
+    //return all friends records
+        $subquery1 = "SELECT * FROM friendship,users WHERE user1accept = 1 and user2accept = 0 and user1id = $userID and user2id = users.id";
+        $subquery2 = "SELECT * FROM friendship,users WHERE user1accept = 0 and user2accept = 1 and user2id = $userID and user1id = users.id";
+        $query = "$subquery1 UNION $subquery2";
+        $res = $this->db->query($query);
+        return $res->result();
+    }
+
     function addFriend($userID, $friendID){
     // keep in mind $user1id < $user2id in friendship
     // check whether $friendID has already sent a friend request to userID
@@ -89,6 +98,7 @@ class User_m extends CI_Model {
                     return false;
             }
         }
+        return false;
     }
 
     function checkLogin($username, $password){
@@ -108,21 +118,15 @@ class User_m extends CI_Model {
     }
 
     function checkIfFriends($user1id, $user2id){
-    //return true if the two users are friends, false otherwise
+    //return the row in frndship table
         if ($user1id < $user2id) {
-            $query = "SELECT * FROM friendship WHERE user1id = $user1id and user2id = $user2id and user1accept = 1 and user2accept = 1";
+            $query = "SELECT * FROM friendship WHERE user1id = $user1id and user2id = $user2id";
         } else {
-            $query = "SELECT * FROM friendship WHERE user1id = $user2id and user2id = $user1id and user1accept = 1 and user2accept = 1";
+            $query = "SELECT * FROM friendship WHERE user1id = $user2id and user2id = $user1id";
         }
         
         $res = $this->db->query($query);
-        $temp = $res->result();
-        if (count($temp) > 0) {
-            //There exists a record indicating that the two users are friends
-            return true;
-        } else {
-            return false;
-        }
+        return $res->result();
         
     }
     function getFeed($userID){
@@ -178,4 +182,13 @@ class User_m extends CI_Model {
         $res = $this->db->query($query);
         return $res->result();       
     }
+
+    function acceptRequest($userid, $requesterid){
+        //accept the request that $requestid had sent to $userid
+    }
+
+    function rejectRequest($userid, $requesterid){
+        //reject the request that $requestid had sent to $userid
+    }
+
 }

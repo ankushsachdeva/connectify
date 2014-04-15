@@ -3,12 +3,15 @@
     <div class="col-xs-12"><h3>Whats new in <? echo $name ?>(<a href="" data-toggle='modal' data-target='#addStoryModal'>Add new story</a>)</h3></div>
   </div>
  
-  
+  <div class="row">
+    <div class="col-xs-8">
 <?php
 foreach ($stories as $story) {
   echo $story;
 }
 ?>
+</div>
+</div>
 </div>
 
 <div id="addStoryModal" class="modal" tabindex="-1" role="dialog" aria-hidden="true">

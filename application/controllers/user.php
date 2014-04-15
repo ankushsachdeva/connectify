@@ -56,8 +56,29 @@ class User extends MY_Controller {
 	}
 	public function profile($userid = -1){
 		$this->isLoggedIn();
-		if($userid == -1)
+		$friendship = 0;
+		if($userid == -1){
 			$userid = $this->session->userdata('userid');
+		}
+		else{
+			
+			$fstatus = $this->User->checkIfFriends($userid, $this->session->userdata('userid'));
+			//if both frnds return 3, if viewer has sent request return 1, if viewer has recvieved return 2, else return 0
+			if(count($fstatus) == 0 ){
+				$friendship = 0;
+			}
+			else{
+				if($fstatus[0]->user1accept == 1 && $fstatus[0]->user2accept == 1){
+					$friendship = 3;
+				}
+				else if(($fstatus[0]->user1id == $this->session->userdata('userid') && $fstatus[0]->user1accept == 1) || ($fstatus[0]->user2id == $this->session->userdata('userid') && $fstatus[0]->user2accept == 1)){
+					$friendship = 1;
+				}
+				else if(($fstatus[0]->user1id == $this->session->userdata('userid') && $fstatus[0]->user2accept == 1) || ($fstatus[0]->user2id == $this->session->userdata('userid') && $fstatus[0]->user1accept == 1)){
+					$friendship = 2;
+				}
+			}
+		}
 		$this->load->view('header',array('title' => "Friends", 'loggedin'=>true));
 		$stories = array( );
 		// for ($i=0; $i < 3; $i++) { 
@@ -69,7 +90,8 @@ class User extends MY_Controller {
 		// 	array_push($stories, $story);
 		// }
 		$res = $this->User->getDetails($userid);
-		$this->load->view('profile', array('session'=> $this->session->all_userdata(),'stories'=> array( ),'fname' => $res[0]->fname,'lname' =>$res[0]->lname,'userid'=>$userid, 'dob'=>$res[0]->dob,'username'=>$res[0]->username,'email'=>$res[0]->email,'img'=>$res[0]->image ));
+
+		$this->load->view('profile', array('session'=> $this->session->all_userdata(),'stories'=> array( ),'fname' => $res[0]->fname,'lname' =>$res[0]->lname,'userid'=>$userid, 'dob'=>$res[0]->dob,'username'=>$res[0]->username,'email'=>$res[0]->email,'img'=>$res[0]->image, 'friendship'=>$friendship ));
 		$this->load->view('footer');
 	}
 	
@@ -83,7 +105,9 @@ class User extends MY_Controller {
 	}
 	public function pendingrequests(){
 		$this->isLoggedIn();
-		$requests =  array(array('fname' => "Zoya", "lname"=>"Afroj", "userid"=>1 ),array('fname' => "Zoya", "lname"=>"Afroj", "userid"=>1 ) );
+		// $requests =  array(array('fname' => "Zoya", "lname"=>"Afroj", "userid"=>1 ),array('fname' => "Zoya", "lname"=>"Afroj", "userid"=>1 ) );
+		$userid = $this->session->userdata('userid');
+		$requests = $this->User->getFriendRequests($userid);
 		$this->load->view('header',array('title' => "Pernding Friend Request", 'loggedin'=>true));
 		$this->load->view('requests', array('requests' => $requests ));
 		$this->load->view('footer');
@@ -111,7 +135,7 @@ class User extends MY_Controller {
 	public function addfriend(){
 		$this->isLoggedIn();
 		$myid = $this->session->userdata('userid');
-		$hisid = $this->session->userdata('userid');
+		$hisid = $this->input->get('userid');
 		$res =$this->User->addFriend($myid, $hisid);
 		$this->feedback($res);
 

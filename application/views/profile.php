@@ -4,7 +4,14 @@
 		<img src="<?if(isset($img)){echo $img;} else{echo '//placehold.it/200';}?>" style="height:300px" alt="" class="img-thumbnail">
 	</div>
 	<div class="col-xs-2"></div>
-	<div class="col-xs-12 text-center"><form action="<?echo site_url('user/addfriend')?>"><input type="hidden" name="userid" value="<?echo $userid?>"><button type="submit">Add Friend</button></form></div>
+	<?if($userid != $session['userid']){?>
+	<div class="col-xs-12 text-center">
+		<?if($friendship==0){?><form action="<?echo site_url('user/addfriend')?>"><input type="hidden" name="userid" value="<?echo $userid?>"><button type="submit">Add Friend</button></form><?}?>
+		<?if($friendship==1){?>You have sent a request<?}?>
+		<?if($friendship==2){?><form action="<?echo site_url('user/acceptfriend')?>"><input type="hidden" name="userid" value="<?echo $userid?>"><button type="submit">Accept Friend Request</button></form><?}?>
+		<?if($friendship==3){?>You are already friends<?}?>
+	</div>
+	<?}?>
 </div>
 <div class="row">
 	<div class="col-xs-2"></div>

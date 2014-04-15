@@ -22,6 +22,12 @@ class Story extends MY_Controller {
 			redirect($this->agent->referrer().'#failed');
 
 	}
+	public function deleteComment(){
+		$this->isLoggedin();
+		$commentid = $this->input->post('commentid');
+		$res = $this->Story->deleteComment($commentid);
+		$this->feedback($res);
+	}
 	public function deleteStory(){
 		$this->isLoggedin();
 		$storyid= $this->input->post('storyid');
