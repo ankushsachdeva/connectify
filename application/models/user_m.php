@@ -129,7 +129,7 @@ class User_m extends CI_Model {
     //return all visible posts to user, that is, posts in all groups that he is in
     //also need to return the comments and likes associated with each of the stories
         $subquery = "SELECT groupID FROM group_members WHERE memberID = $userID";
-        $query = "SELECT * FROM group_posts,stories WHERE stories.id = group_posts.storyid and group_posts.groupid in ($subquery) ORDER BY stories.time DESC";
+        $query = "SELECT *, stories.time AS time FROM group_posts,stories,users WHERE stories.id = group_posts.storyid and users.id = stories.authorid and group_posts.groupid in ($subquery) ORDER BY stories.time DESC";
         $res = $this->db->query($query);
         return $res->result();
     }
@@ -161,6 +161,12 @@ class User_m extends CI_Model {
     function getDetails($userid){
     //return user details
         $query = "SELECT * FROM users WHERE id = $userid";
+        $res = $this->db->query($query);
+        return $res->result();
+    }
+    function getDetailsUsername($username){
+    //return user details
+        $query = "SELECT * FROM users WHERE username = '$username'";
         $res = $this->db->query($query);
         return $res->result();
     }

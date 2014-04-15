@@ -12,4 +12,10 @@
         	redirect('/','location');
         }
     }
+    public function feedback($res){
+        if($res)
+            redirect($this->agent->referrer().'#success');
+        else
+            redirect($this->agent->referrer().'#failed');
+    }
 }

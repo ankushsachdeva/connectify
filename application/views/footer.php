@@ -17,7 +17,7 @@
 	<script>
 		 $(document).ready(function() {
 			$('.multiselect').multiselect();
-			$('.bday').datepicker();
+			$('.bday').datepicker({format:'yyyy/mm/dd'});
 			$(location.hash).show();
 
 		});

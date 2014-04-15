@@ -49,7 +49,7 @@ class Group_m extends CI_Model {
 
     function getMembers($groupID){
     //join group_members with user to return all member details
-    	$query = "SELECT * FROM group_members,users WHERE group_members.memberID = users.id and groupID = $groupID";
+    	$query = "SELECT * FROM group_members,users WHERE groupID = $groupID and group_members.memberID = users.id ";
     	$res = $this->db->query($query);
    	   	return $res->result();
     }
@@ -58,7 +58,7 @@ class Group_m extends CI_Model {
     //join group_posts with stories to return all story details 
     //sort stories chronologically backwards
     //also get the likes and comments details associated with each story
-    	$query = "SELECT * FROM group_posts,stories WHERE stories.id = group_posts.storyid and group_posts.groupid = $groupID ORDER BY stories.time DESC";
+    	$query = "SELECT * FROM users,group_posts,stories WHERE stories.id = group_posts.storyid and stories.authorid = users.id and  group_posts.groupid = $groupID ORDER BY stories.time DESC";
     	$res = $this->db->query($query);
    	   	return $res->result();  
     }
@@ -79,5 +79,15 @@ class Group_m extends CI_Model {
     	$query = "SELECT * FROM group_members,users WHERE group_members.memberID = users.id and groupID = $groupID and role = 2";
     	$res = $this->db->query($query);
    	   	return $res->result();	
+    }
+    function getAll($userid){
+        $query = "SELECT *, groups.time AS time  FROM groups, group_members WHERE group_members.memberID = $userid and group_members.groupID = groups.id ";
+        $res = $this->db->query($query);
+        return $res->result();  
+    }
+    function getDetails($groupid){
+     $query = "SELECT * FROM groups WHERE groups.id = $groupid ";
+        $res = $this->db->query($query);
+        return $res->result();     
     }
 }

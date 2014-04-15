@@ -23,24 +23,24 @@
 			  			<div class="modal-body">
 			  				<?foreach ($group['members'] as $member) { ?>
 			  				<div class="row">
-			  					<div class="col-xs-3"><img class="comment-img img-thumbnail" src="<?if(isset($member['image'])){echo $member['image'];} else {echo '//placehold.it/100';}?>" alt=""></div>
+			  					<div class="col-xs-3"><img class="comment-img img-thumbnail" src="<?if(isset($member->image)){echo $member->image;} else {echo '//placehold.it/100';}?>" alt=""></div>
 			  					<div style="margin-top:30px" class="col-xs-9">
 			  						<div class="text-center">
-			  							<a href="<?echo site_url('user/profile/'.$member['userid'])?>">
-			  								<?echo $member['fname'].' '.$member['lname']?>
+			  							<a href="<?echo site_url('user/profile/'.$member->memberID)?>">
+			  								<?echo $member->fname.' '.$member->lname?>
 			  							</a>
 			  							<?if(!$group['iamadmin']){?>
-			  							(<?if($member['role']==0) {echo "Member";} elseif($member['role']==1) {echo "Moderator";} else {echo "Admin";}?>)
+			  							(<?if($member->role==0) {echo "Member";} elseif($member->role==1) {echo "Moderator";} else {echo "Admin";}?>)
 			  							<?}
 			  							else{?>
 											<form class="form-inline" action="<?echo site_url('group/changerole')?>" method="POST">
 												<select name="role" id="">
-													<option value="0" <?if($member['role']==0) echo "selected"?> >Member</option>
-													<option value="1" <?if($member['role']==1) echo "selected"?> >Moderator</option>
-													<option value="2" <?if($member['role']==2) echo "selected"?> >Admin</option>
+													<option value="0" <?if($member->role==0) echo "selected"?> >Member</option>
+													<option value="1" <?if($member->role==1) echo "selected"?> >Moderator</option>
+													<option value="2" <?if($member->role==2) echo "selected"?> >Admin</option>
 												</select>
 												<input type="hidden" name="groupid" value="<?echo $group['groupid']?>">
-												<input type="hidden" name="userid" value="<?echo $member['userid']?>">
+												<input type="hidden" name="userid" value="<?echo $member->memberID?>">
 						         				<button class="btn btn-default btn-xs" type="submit">Change privileges</button>
 
 											</form>
@@ -49,7 +49,7 @@
 			  							?>
 			  						</div>
 									<div class="pull-right">
-										Joined on <?echo $member['time']?>
+										Joined on <?echo $member->time?>
 									</div>
 			  					</div>
 			  				</div>

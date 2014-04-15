@@ -1,4 +1,4 @@
-<div class="container cbody">
+<div class="cbody">
   <div class="row">
     <div class="col-xs-12"><h3>Whats new in <? echo $name ?>(<a href="" data-toggle='modal' data-target='#addStoryModal'>Add new story</a>)</h3></div>
   </div>
