@@ -59,8 +59,19 @@
 			  			<div class="row">
 			  				<form method="POST" action="<?echo site_url('group/addmember')?>">
 								<select class="multiselect" multiple="multiple" name="memberIDs">
-									<?foreach ($friends as $friend) { ?>
-										<option value="<?echo $friend['userid']?>"><? echo $friend['fname'].' '.$friend['lname']?></option>
+									<?foreach ($friends as $friend) { 
+										$friendid = $friend->id;
+										$flag = false;
+										foreach ($group['members'] as $member) {
+											if($member->memberID == $friendid){
+												$flag = true;
+												break;
+											}
+										}
+										if($flag)
+											continue;
+										?>
+										<option value="<?echo $friend->id?>"><? echo $friend->fname.' '.$friend->lname?></option>
 									<?}?>
 								</select>
 								<input type="hidden" name="groupid" value="<?echo $group['groupid']?>">

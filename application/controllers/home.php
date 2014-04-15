@@ -8,6 +8,7 @@ class Home extends MY_Controller {
 		$this->load->model('Story_m','Story');
 
 	}
+	
 	public function index()
 	{
 		$this->isLoggedin();
@@ -17,10 +18,11 @@ class Home extends MY_Controller {
 		$stories = array( );
 		foreach ($res as $row) {
 			$likes = $this->Story->getLikes($row->storyid);
+			$alreadyLiked = $this->_checkIfLiked($likes, $userid);
 			$comments = $this->Story->getComments($row->storyid);
 			$story = $this->load->view('story', 
 				array('session'=>$this->session->all_userdata(),'storyid'=>$row->storyid,'authorid'=>$row->authorid,'comments'=> $comments,
-					'likes'=>$likes,
+					'likes'=>$likes,'alreadyLiked'=>$alreadyLiked,
 					'fname' => $row->fname, 'lname' => $row->lname,'image' =>$row->image, 'content' => $row->content,'numLikes' =>count($likes), 'numComments' =>count($comments), 'time' =>$row->time),
 				true);
 			array_push($stories, $story);

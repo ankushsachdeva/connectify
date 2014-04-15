@@ -33,8 +33,8 @@ class User_m extends CI_Model {
 
     function getFriendRequests($userID){ 
     //return all friends records
-        $subquery1 = "SELECT * FROM friendship,users WHERE user1accept = 1 and user2accept = 0 and user1id = $userID and user2id = users.id";
-        $subquery2 = "SELECT * FROM friendship,users WHERE user1accept = 0 and user2accept = 1 and user2id = $userID and user1id = users.id";
+        $subquery1 = "SELECT * FROM friendship,users WHERE user1accept = 1 and user2accept = 0 and user2id = $userID and user1id = users.id";
+        $subquery2 = "SELECT * FROM friendship,users WHERE user1accept = 0 and user2accept = 1 and user1id = $userID and user2id = users.id";
         $query = "$subquery1 UNION $subquery2";
         $res = $this->db->query($query);
         return $res->result();
@@ -153,9 +153,29 @@ class User_m extends CI_Model {
     }
 
     function updateDetails($fname ,  $lname , $dob , $gender , $email, $userid){
-        $data = array('fname' => $fname, 'lname' => $lname, 'dob' => $dob, 'gender' => $gender, 'email' => $email);
+        $data = array();
+        if(count($fname))
+            $data['fname'] = $fname;
+        if(count($lname))
+            $data['lname'] = $lname;
+        if(count($dob))
+            $data['dob'] = $dob;
+        if(count($gender))
+            $data['gender'] = $gender;
+        if(count($email))
+            $data['email'] = $email;
+        // $data = array('fname' => $fname, 'lname' => $lname, 'dob' => $dob, 'gender' => $gender, 'email' => $email);
         $this->db->update('users',$data,array('id' => $userid));
         
+        if($this->db->affected_rows())
+            return true;
+        else
+            return false;
+    }
+    function updatePic($userid, $filename){
+        $data = array('image' => '/connectify/images/'.$filename);
+        $this->db->update('users',$data,array('id' => $userid));
+        return true;
         if($this->db->affected_rows())
             return true;
         else

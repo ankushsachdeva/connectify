@@ -12,8 +12,8 @@ class Group extends MY_Controller {
 	}
 	private function _checkAdmin($members, $userid){
 		foreach ($members as $member) {
-			if($member->id = $userid){
-				if($member->role = 2)
+			if($member->id == $userid){
+				if($member->role == 2)
 					return true;
 				else
 					return false;
@@ -33,10 +33,11 @@ class Group extends MY_Controller {
 		$stories = array( );
 		foreach ($res as $row) {
 			$likes = $this->Story->getLikes($row->storyid);
+			$alreadyLiked = $this->_checkIfLiked($likes, $this->session->userdata('userid'));
 			$comments = $this->Story->getComments($row->storyid);
 			$story = $this->load->view('story', 
 				array('session'=>$this->session->all_userdata(),'storyid'=>$row->storyid,'authorid'=>$row->authorid,'comments'=> $comments,
-					'likes'=>$likes,
+					'likes'=>$likes,'alreadyLiked'=>$alreadyLiked,
 					'fname' => $row->fname, 'lname' => $row->lname,'image' =>$row->image, 'content' => $row->content,'numLikes' =>count($likes), 'numComments' =>count($comments), 'time' =>$row->time),
 				true);
 			array_push($stories, $story);
@@ -88,7 +89,7 @@ class Group extends MY_Controller {
 		$memberIDs = $this->input->post('memberIDs');
 		$groupID = $this->input->post('groupid');
 		$roles = array_fill(0, count($memberIDs), 0);
-		$res = $this->Group->addMember($groupID, $memberIDs, $roles);
+		$res = $this->Group->addMembers($groupID, $memberIDs, $roles);
 		if($res)
 			redirect($this->agent->referrer().'#success');
 		else

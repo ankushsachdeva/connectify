@@ -18,4 +18,11 @@
         else
             redirect($this->agent->referrer().'#failed');
     }
+    public function _checkIfLiked($likes, $userid){
+        foreach ($likes as $like) {
+            if($like->userid == $userid)
+                return true;
+        }
+        return false;
+    }
 }

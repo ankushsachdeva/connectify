@@ -91,7 +91,7 @@ class User extends MY_Controller {
 		// }
 		$res = $this->User->getDetails($userid);
 
-		$this->load->view('profile', array('session'=> $this->session->all_userdata(),'stories'=> array( ),'fname' => $res[0]->fname,'lname' =>$res[0]->lname,'userid'=>$userid, 'dob'=>$res[0]->dob,'username'=>$res[0]->username,'email'=>$res[0]->email,'img'=>$res[0]->image, 'friendship'=>$friendship ));
+		$this->load->view('profile', array('session'=> $this->session->all_userdata(),'stories'=> array( ),'fname' => $res[0]->fname,'lname' =>$res[0]->lname,'userid'=>$userid, 'dob'=>$res[0]->dob,'username'=>$res[0]->username,'email'=>$res[0]->email,'image'=>$res[0]->image,'gender'=>$res[0]->gender, 'friendship'=>$friendship ));
 		$this->load->view('footer');
 	}
 	
@@ -117,8 +117,39 @@ class User extends MY_Controller {
 		$userid = $this->session->userdata('userid');
 		$this->load->view('header',array('title' => "Update Profile", 'loggedin'=>true));
 		
-		$this->load->view('updateprofile', array('session'=> $this->session->all_userdata(),'fname' => "Koyal",'lname' =>'Rana','userid'=>$userid, 'dob'=>'23rd July 1993','username'=>"koyal",'email'=>"koyalrana@iitk.ac.in",'img'=>"http://newseastwest.com/wp-content/uploads/2014/04/Miss-India-Koyal-Rana.jpg" ));
+		$this->load->view('updateprofile', $this->session->all_userdata());
 		$this->load->view('footer');	
+	}
+	function upload()
+	{
+		$config['upload_path'] = './images/';
+		$config['allowed_types'] = 'gif|jpg|png';
+		$config['max_size']	= '0';
+		$config['max_width']  = '0';
+		$config['max_height']  = '0';
+		$config['overwrite'] = true;
+		$config['file_name']  = 'dp_'.$this->session->userdata('userid');
+
+		$this->load->library('upload', $config);
+
+		if ( ! $this->upload->do_upload())
+		{
+			$error = array('error' => $this->upload->display_errors());
+
+			var_dump($error);
+		}
+		else
+		{	
+			$fileName = $this->upload->data();
+			$fileName = $fileName['file_name'];
+			$res = $this->User->updatePic($this->session->userdata('userid'),$fileName);
+			if($res){
+				$userid = $this->session->userdata('userid');
+				$userdata = $this->User->getDetails($userid);
+				$this->session->set_userdata($userdata[0]);
+			}
+			$this->feedback($res);
+		}
 	}
 	public function updateprofile(){
 		$this->isLoggedIn();
@@ -129,8 +160,13 @@ class User extends MY_Controller {
 		$email = $this->input->post('email');
 		$gender = $this->input->post('gender');
 		$userid = $this->session->userdata('userid');
-		$res = updateDetails($fname ,  $lname , $dob , $gender , $email, $userid);
-
+		$res = $this->User->updateDetails($fname ,  $lname , $dob , $gender , $email, $userid);
+		if($res){
+			$userid = $this->session->userdata('userid');
+			$userdata = $this->User->getDetails($userid);
+			$this->session->set_userdata($userdata[0]);
+		}
+		$this->feedback($res);
 	}
 	public function addfriend(){
 		$this->isLoggedIn();

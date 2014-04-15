@@ -48,5 +48,12 @@ class Story extends MY_Controller {
 		else
 			redirect('group/show/'.$groupid.'#failed');
 	}
+	public function likestory(){
+		$this->isLoggedin();
+		$storyid = $this->input->post('storyid');
+		$res = $this->Story->likeStory($storyid, $this->session->userdata('userid'));
+		$this->feedback($res, $this->session->userdata('userid'));
+
+	}
 	
 }

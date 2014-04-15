@@ -64,9 +64,7 @@ class Story_m extends CI_Model {
     //Shows how to get data from db using Active Record queries
     function getLikes($storyID){
     //return an array
-        $this->db->select('userid,  time')->where('storyid',$storyID)->from('story_likes');
-        return $this->db->get()->result();
-        $query = "SELECT fname, lname, userid, image FROM story_like, users WHERE story_likes.storyid = $storyID AND story_likes.userid = users.id";
+        $query = "SELECT fname, lname, userid, image FROM story_likes, users WHERE story_likes.storyid = $storyID AND story_likes.userid = users.id";
         $res = $this->db->query($query);
         return $res->result();
     }
