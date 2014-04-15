@@ -9,16 +9,26 @@ class User_m extends CI_Model {
 
     }
 
+    //No Transaction required as there is only a single write
     function addUser($fname,$lname,$username,$dob,$gender,$email,$password){
     //return true if record is inserted, false otherwise (for example if constraints are not satisfied)
+        $query = "SELECT * FROM users WHERE email = \"$email\" or username = \"$username\"";
+        $res = $this->db->query($query);
+        $temp = $res->result();
 
-        $data = array('fname' => $fname, 'lname' => $lname, 'username' => $username, 'dob' => $dob, 'gender' => $gender, 'email' => $email, 'passwd' => $password);
-        $this->db->insert('users',$data);
-        
-        if($this->db->affected_rows())
-             return true;
-        else
+        if (count($temp) > 0) {
+        //cannot create new user record as email and username must be unique
             return false;
+        } else {
+        //user record can be created - if attempted DB operation fails return false
+            $data = array('fname' => $fname, 'lname' => $lname, 'username' => $username, 'dob' => $dob, 'gender' => $gender, 'email' => $email, 'passwd' => $password);
+            $this->db->insert('users',$data);
+            
+            if($this->db->affected_rows())
+                 return true;
+            else
+                return false;
+        }
     }
 
     //manual query coz of active record does not support union
@@ -140,9 +150,11 @@ class User_m extends CI_Model {
     //return $numOfItems number of stories that are authored by $userID and visible to $viewerID
     //by visible we mean stories posted in all mutual groups (display in chronologically backwards order)
         $subquery1 = "SELECT groupID from group_members where memberID = $userID";
-        $subquery2 = "SELECT groupID from group_members where memberID = $viewerID";
-        $subquery = "($subquery1) INTERSECT ($subquery2)";  //all common groups 
-        $query = "SELECT * FROM group_posts,stories WHERE stories.id = group_posts.storyid and group_posts.groupid in ($subquery) LIMIT $numOfItems ORDER BY time DESC";
+        
+        //all groups common to both users - MySQL does not support the INTERSECT operation
+        $subquery = "SELECT groupID from group_members where memberID = $viewerID and groupID in ($subquery1)";
+         
+        $query = "SELECT * FROM group_posts,stories WHERE stories.id = group_posts.storyid and group_posts.groupid in ($subquery) ORDER BY stories.time DESC  LIMIT $numOfItems";
 
         $res = $this->db->query($query);
         return $res->result();   
@@ -165,11 +177,62 @@ class User_m extends CI_Model {
         return $res->result();
     }
 
-    //All DB operations are reads - NO TRANSACTIONS NEEDED
+
     function search($fname, $lname, $fromDOB, $toDOB, $gender){
     //all are substring search, fromDOB-toDOB is the range of DOB
-        $query = "SELECT * FROM users WHERE (fname like $fname) or (lname like $lname) or (gender = $gender) or (dob between $fromDOB and $toDOB) or ";
+    //if the user has not specified any value for one of the search parameters pass NULL
+    //if no value has been specified by the user for gender however PASS 2 AND NOT NULL
+        if ($toDOB == NULL) {
+            $toDOB = "9999-01-01";
+        }
+        if ($fromDOB == NULL) {
+            $fromDOB = "0000-01-01";
+        }
+        if ($gender == 0 or $gender == 1) {
+            $query = "SELECT * FROM users WHERE (LOWER(fname) like LOWER(\"%$fname%\")) and (LOWER(lname) like LOWER(\"%$lname%\")) and (gender = $gender) and (dob BETWEEN \"$fromDOB\" and \"$toDOB\")";
+        } else {
+            $query = "SELECT * FROM users WHERE (LOWER(fname) like LOWER(\"%$fname%\")) and (LOWER(lname) like LOWER(\"%$lname%\")) and (dob BETWEEN \"$fromDOB\" and \"$toDOB\")";
+        }
+        
         $res = $this->db->query($query);
         return $res->result();       
+    }
+
+    function acceptRequest($userid, $requesterid){
+    //accept the request that $requestid had sent to $userid
+        if ($userid > $requesterid) {
+            $smallerID = $requesterid;
+            $largerID = $userid;
+        } else {
+            $smallerID = $userid;
+            $largerID = $requesterid;
+        }
+        
+        $data = array('user1accept' => 1,'user2accept' => 1);
+        $this->db->update('friendship',$data,array('user1id' => $smallerID,'user2id' => $largerID));
+
+        if($this->db->affected_rows())
+            return true;
+        else
+            return false;
+    }
+
+    function rejectRequest($userid, $requesterid){
+    //reject the request that $requestid had sent to $userid
+        if ($userid > $requesterid) {
+            $smallerID = $requesterid;
+            $largerID = $userid;
+        } else {
+            $smallerID = $userid;
+            $largerID = $requesterid;
+        }
+        
+
+        $this->db->delete('friendship', array('user1id' => $smallerID, 'user2id' = $largerID));
+        
+        if($this->db->affected_rows())
+            return true;
+        else
+            return false;
     }
 }
