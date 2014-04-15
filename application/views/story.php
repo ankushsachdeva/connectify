@@ -7,7 +7,7 @@
   <div class="col-md-10 col-sm-9">
     <h3><? echo $fname." ".$lname?></h3>
     <?if($alreadyLiked){ ?> You like this <? } else { ?> <form method ="post" action="<?echo site_url('story/likestory')?>"><input type="hidden" name="storyid" value="<?echo $storyid?>"> <button type="submit">Like</button></form> <? }?>
-    <?if($session['id'] == $authorid){?><div class="pull-right"><form method ="post" action="<?echo site_url('story/deletestory')?>"><input type="hidden" name="storyid" value="<?echo $storyid?>"> <button type="submit">Delete</button></form></div><?}?>
+    <?if(($session['id'] == $authorid) || (isset($ismod) && $ismod)){?><div class="pull-right"><form method ="post" action="<?echo site_url('story/deletestory')?>"><input type="hidden" name="storyid" value="<?echo $storyid?>"> <button type="submit">Delete</button></form></div><?}?>
     <div class="row">
       <div class="col-xs-9">
         <p><? echo $content?></p>
@@ -31,7 +31,7 @@
         foreach ($comments as $comment) { ?>
           <div class="row">
             <div class="col-xs-6"><h4><?echo $comment->fname.' '.$comment->lname ?></h4>  </div>
-            <?if($session['userid'] == $comment->authorid){?><div class="col-xs-4"><form method ="post" action="<?echo site_url('story/deletecomment')?>"><input type="hidden" name="commentid" value="<?echo $comment->id?>"> <button type="submit">Delete</button></form></div><?}?>
+            <?if($session['userid'] == $comment->authorid || (isset($ismod) && $ismod)){?><div class="col-xs-4"><form method ="post" action="<?echo site_url('story/deletecomment')?>"><input type="hidden" name="commentid" value="<?echo $comment->id?>"> <button type="submit">Delete</button></form></div><?}?>
 
             <div class="col-xs-2"><?echo $comment->time?></div>
           </div>

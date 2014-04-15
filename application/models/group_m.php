@@ -80,6 +80,12 @@ class Group_m extends CI_Model {
     	$res = $this->db->query($query);
    	   	return $res->result();	
     }
+    function getMods($groupID){
+    //join group_members with users to returl all details of admins
+        $query = "SELECT * FROM group_members,users WHERE group_members.memberID = users.id and groupID = $groupID and role > 0";
+        $res = $this->db->query($query);
+        return $res->result();  
+    }
     function getAll($userid){
         $query = "SELECT *, groups.time AS time  FROM groups, group_members WHERE group_members.memberID = $userid and group_members.groupID = groups.id ";
         $res = $this->db->query($query);

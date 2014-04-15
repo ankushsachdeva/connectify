@@ -30,6 +30,15 @@ class Group extends MY_Controller {
 		$this->load->view('header',array('title' => "Group", 'loggedin'=>$this->session->userdata('fname') ));
 		$res = $this->Group->getStories($groupID);
 		$details = $this->Group->getDetails($groupID);
+		$mods = $this->Group->getMods($groupID);
+		$userid = $this->session->userdata('userid');
+		$ismod = false;
+		foreach ($mods as $mod) {
+			if($mod->memberID == $userid){
+				$ismod = true;
+				break;
+			}
+		}
 		$stories = array( );
 		foreach ($res as $row) {
 			$likes = $this->Story->getLikes($row->storyid);
@@ -37,7 +46,7 @@ class Group extends MY_Controller {
 			$comments = $this->Story->getComments($row->storyid);
 			$story = $this->load->view('story', 
 				array('session'=>$this->session->all_userdata(),'storyid'=>$row->storyid,'authorid'=>$row->authorid,'comments'=> $comments,
-					'likes'=>$likes,'alreadyLiked'=>$alreadyLiked,
+					'likes'=>$likes,'alreadyLiked'=>$alreadyLiked, 'ismod' =>$ismod,
 					'fname' => $row->fname, 'lname' => $row->lname,'image' =>$row->image, 'content' => $row->content,'numLikes' =>count($likes), 'numComments' =>count($comments), 'time' =>$row->time),
 				true);
 			array_push($stories, $story);
