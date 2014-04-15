@@ -38,6 +38,8 @@
 													<option value="0" <?if($member->role==0) echo "selected"?> >Member</option>
 													<option value="1" <?if($member->role==1) echo "selected"?> >Moderator</option>
 													<option value="2" <?if($member->role==2) echo "selected"?> >Admin</option>
+													<option value="-1" >Remove</option>
+
 												</select>
 												<input type="hidden" name="groupid" value="<?echo $group['groupid']?>">
 												<input type="hidden" name="userid" value="<?echo $member->memberID?>">
@@ -58,7 +60,7 @@
 			  			<?if($group['iamadmin']){?>
 			  			<div class="row">
 			  				<form method="POST" action="<?echo site_url('group/addmember')?>">
-								<select class="multiselect" multiple="multiple" name="memberIDs">
+								<select class="multiselect" multiple="multiple" name="memberIDs[]">
 									<?foreach ($friends as $friend) { 
 										$friendid = $friend->id;
 										$flag = false;

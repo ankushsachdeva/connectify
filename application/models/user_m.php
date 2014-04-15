@@ -158,8 +158,8 @@ class User_m extends CI_Model {
         //all groups common to both users - MySQL does not support the INTERSECT operation
         $subquery = "SELECT groupID from group_members where memberID = $viewerID and groupID in ($subquery1)";
          
-        $query = "SELECT * FROM group_posts,stories WHERE stories.id = group_posts.storyid and group_posts.groupid in ($subquery) ORDER BY stories.time DESC  LIMIT $numOfItems";
-
+        $query = "SELECT *, stories.time AS time FROM group_posts,stories,users WHERE stories.id = group_posts.storyid and stories.authorid=$userID and users.id=$userID and group_posts.groupid in ($subquery) ORDER BY stories.time DESC  LIMIT $numOfItems";
+        
         $res = $this->db->query($query);
         return $res->result();   
     }
@@ -258,7 +258,7 @@ class User_m extends CI_Model {
         }
         
 
-        $this->db->delete('friendship', array('user1id' => $smallerID, 'user2id' = $largerID));
+        $this->db->delete('friendship', array('user1id' => $smallerID, 'user2id' => $largerID));
         
         if($this->db->affected_rows())
             return true;

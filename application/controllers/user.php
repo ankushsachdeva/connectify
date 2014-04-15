@@ -5,6 +5,8 @@ class User extends MY_Controller {
 	function __construct(){
 		parent::__construct();
 		$this->load->model('User_m','User');
+		$this->load->model('Story_m','Story');
+
 	}
 	public function index()
 	{
@@ -54,6 +56,21 @@ class User extends MY_Controller {
 		$this->load->view('footer');
 
 	}
+	public function searchuser(){
+		$this->isLoggedIn();
+		$fname = $this->input->post('fname');
+		$lname = $this->input->post('lname');
+		$email = $this->input->post('email');
+		$fromDOB = $this->input->post('fromdob');
+		$toDOB = $this->input->post('todob');
+		$gender = $this->input->post('gender');
+		$res = $this->User->search($fname, $lname, $fromDOB, $toDOB, $gender);
+		
+		$this->load->view('header',array('title' => "Search Friends", 'loggedin'=>true));
+		$this->load->view('viewresults', array('users' => $res ));
+		$this->load->view('footer');
+
+	}
 	public function profile($userid = -1){
 		$this->isLoggedIn();
 		$friendship = 0;
@@ -81,6 +98,19 @@ class User extends MY_Controller {
 		}
 		$this->load->view('header',array('title' => "Friends", 'loggedin'=>true));
 		$stories = array( );
+		$res = $this->User->getFeedVisibleToSomeone($userid, $this->session->userdata('userid'), 3);
+
+		foreach ($res as $row) {
+			$likes = $this->Story->getLikes($row->storyid);
+			$alreadyLiked = $this->_checkIfLiked($likes, $userid);
+			$comments = $this->Story->getComments($row->storyid);
+			$story = $this->load->view('story', 
+				array('session'=>$this->session->all_userdata(),'storyid'=>$row->storyid,'authorid'=>$row->authorid,'comments'=> $comments,
+					'likes'=>$likes,'alreadyLiked'=>$alreadyLiked,
+					'fname' => $row->fname, 'lname' => $row->lname,'image' =>$row->image, 'content' => $row->content,'numLikes' =>count($likes), 'numComments' =>count($comments), 'time' =>$row->time),
+				true);
+			array_push($stories, $story);
+		}
 		// for ($i=0; $i < 3; $i++) { 
 		// 	$story = $this->load->view('story', 
 		// 		array('id'=>$i,'session'=> $this->session->all_userdata(),'storyid'=>2,'authorid'=>3,'comments'=>array(array('fname' => "Ankush" ,'lname'=>"Sachdeva" ,'content'=>"theek hai!",'time'=>"5 minutes ago", "authorid"=>1, "commentid"=>1)),
@@ -91,7 +121,7 @@ class User extends MY_Controller {
 		// }
 		$res = $this->User->getDetails($userid);
 
-		$this->load->view('profile', array('session'=> $this->session->all_userdata(),'stories'=> array( ),'fname' => $res[0]->fname,'lname' =>$res[0]->lname,'userid'=>$userid, 'dob'=>$res[0]->dob,'username'=>$res[0]->username,'email'=>$res[0]->email,'image'=>$res[0]->image,'gender'=>$res[0]->gender, 'friendship'=>$friendship ));
+		$this->load->view('profile', array('session'=> $this->session->all_userdata(),'stories'=> $stories,'fname' => $res[0]->fname,'lname' =>$res[0]->lname,'userid'=>$userid, 'dob'=>$res[0]->dob,'username'=>$res[0]->username,'email'=>$res[0]->email,'image'=>$res[0]->image,'gender'=>$res[0]->gender, 'friendship'=>$friendship ));
 		$this->load->view('footer');
 	}
 	
@@ -171,9 +201,23 @@ class User extends MY_Controller {
 	public function addfriend(){
 		$this->isLoggedIn();
 		$myid = $this->session->userdata('userid');
-		$hisid = $this->input->get('userid');
+		$hisid = $this->input->post('userid');
 		$res =$this->User->addFriend($myid, $hisid);
 		$this->feedback($res);
 
+	}
+	public function acceptrequest(){
+		$this->isLoggedIn();
+		$myid = $this->session->userdata('userid');
+		$hisid = $this->input->post('userid');
+		$res = $this->User->acceptRequest($myid, $hisid);
+		$this->feedback($res);
+	}
+	public function rejectrequest(){
+		$this->isLoggedIn();
+		$myid = $this->session->userdata('userid');
+		$hisid = $this->input->post('userid');
+		$res = $this->User->rejectRequest($myid, $hisid);
+		$this->feedback($res);
 	}
 }

@@ -174,7 +174,8 @@ CREATE TABLE IF NOT EXISTS `comments` (
 
 ALTER TABLE `comments`
   ADD CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`authorid`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`storyid`) REFERENCES `stories` (`id`);
+  ADD CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`storyid`) REFERENCES `stories` (`id`)
+  ON DELETE CASCADE  ;
 
 
 
@@ -192,7 +193,7 @@ ALTER TABLE `group_members`
 -- Constraints for table `group_posts`
 --
 ALTER TABLE `group_posts`
-  ADD CONSTRAINT `group_posts_ibfk_1` FOREIGN KEY (`storyid`) REFERENCES `stories` (`id`),
+  ADD CONSTRAINT `group_posts_ibfk_1` FOREIGN KEY (`storyid`) REFERENCES `stories` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `group_posts_ibfk_2` FOREIGN KEY (`groupid`) REFERENCES `groups` (`id`);
 
 --
@@ -206,8 +207,20 @@ ALTER TABLE `stories`
 -- Constraints for table `story_likes`
 --
 ALTER TABLE `story_likes`
-  ADD CONSTRAINT `story_likes_ibfk_1` FOREIGN KEY (`storyid`) REFERENCES `stories` (`id`),
+  ADD CONSTRAINT `story_likes_ibfk_1` FOREIGN KEY (`storyid`) REFERENCES `stories` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `story_likes_ibfk_2` FOREIGN KEY (`userid`) REFERENCES `users` (`id`);
+
+
+CREATE TRIGGER remove_member
+AFTER DELETE ON group_members
+FOR EACH ROW 
+DELETE FROM stories WHERE `id` IN 
+ (
+SELECT stories_.id AS id FROM  
+(SELECT * FROM group_posts WHERE groupid = OLD.groupID) AS group_posts_ 
+JOIN
+(SELECT id FROM stories WHERE stories.authorid =  OLD.memberID ) AS stories_  
+ON (group_posts_.storyid = stories_.id));
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

@@ -27,6 +27,17 @@ class Group extends MY_Controller {
 	public function show($groupID)
 	{
 		$this->isLoggedin();
+		$members = $this->Group->getMembers($groupID);
+		$valid = false;
+		foreach ($members as $member) {
+			if($member->memberID == $this->session->userdata('userid')){
+				$valid = true;
+				break;
+			}
+		}
+		if(!$valid){
+			redirect('/#failed','location');
+		}
 		$this->load->view('header',array('title' => "Group", 'loggedin'=>$this->session->userdata('fname') ));
 		$res = $this->Group->getStories($groupID);
 		$details = $this->Group->getDetails($groupID);
@@ -98,6 +109,7 @@ class Group extends MY_Controller {
 		$memberIDs = $this->input->post('memberIDs');
 		$groupID = $this->input->post('groupid');
 		$roles = array_fill(0, count($memberIDs), 0);
+
 		$res = $this->Group->addMembers($groupID, $memberIDs, $roles);
 		if($res)
 			redirect($this->agent->referrer().'#success');
@@ -109,7 +121,10 @@ class Group extends MY_Controller {
 		$newRole = $this->input->post('role');
 		$userid = $this->input->post('userid');
 		$groupid = $this->input->post('groupid');
-		$res = $this->Group->changeRole($userid, $groupid, $newRole);
+		if($newRole>0)
+			$res = $this->Group->changeRole($userid, $groupid, $newRole);
+		else
+			$res = $this->Group->removeMember($groupid, $userid);
 		if($res)
 			redirect('group/showall#success');
 		else

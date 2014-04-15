@@ -26,6 +26,14 @@ class Group_m extends CI_Model {
         	return false; 
     }
 
+    function removeMember($groupID, $memberID){
+        $this->db->delete('group_members', array('memberID' => $memberID, 'groupID' => $groupID));
+        
+        if($this->db->affected_rows())
+            return true;
+        else
+            return false;
+    }
     function addMembers($groupID, $memberIDs, $roles){
     //$memberIDs is an array of new member IDs, $roles is an array of roles (of the same size)
     //assumes both of the above arrays are indexed from 0

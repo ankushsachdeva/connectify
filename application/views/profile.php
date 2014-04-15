@@ -6,9 +6,9 @@
 	<div class="col-xs-2"></div>
 	<?if($userid != $session['userid']){?>
 	<div class="col-xs-12 text-center">
-		<?if($friendship==0){?><method="post" form action="<?echo site_url('user/addfriend')?>"><input type="hidden" name="userid" value="<?echo $userid?>"><button type="submit">Add Friend</button></form><?}?>
+		<?if($friendship==0){?><form method="post"  action="<?echo site_url('user/addfriend')?>"><input type="hidden" name="userid" value="<?echo $userid?>"><button type="submit">Add Friend</button></form><?}?>
 		<?if($friendship==1){?>You have sent a request<?}?>
-		<?if($friendship==2){?><method="post" form action="<?echo site_url('user/acceptfriend')?>"><input type="hidden" name="userid" value="<?echo $userid?>"><button type="submit">Accept Friend Request</button></form><?}?>
+		<?if($friendship==2){?><form method="post"  action="<?echo site_url('user/acceptfriend')?>"><input type="hidden" name="userid" value="<?echo $userid?>"><button type="submit">Accept Friend Request</button></form><?}?>
 		<?if($friendship==3){?>You are already friends<?}?>
 	</div>
 	<?}?>
@@ -35,7 +35,7 @@
 		<hr>
 		<div class="row">
 			<div class="col-xs-1"></div>
-			<div class="col-xs-10 text-center"><h3>Recent Stories</h3></div>
+			<div class="col-xs-10 text-center"><h3>Recent Activity</h3></div>
 		</div>
 		<?php 
 		foreach ($stories as $story) {

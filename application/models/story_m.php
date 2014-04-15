@@ -12,19 +12,26 @@ class Story_m extends CI_Model {
     //add to stories table
     //add to group_posts table using auto generated story id
     // return true/false
-        $data = array('authorid' => $authorID, 'content' => $content);
-        $this->db->insert('stories',$data);
-        $temp = $this->db->affected_rows();
-        $newstoryID = $this->db->insert_id();
+        $query1 = "INSERT INTO stories(authorid, content) VALUES ($authorID, '$content')";
+        $query2 = "INSERT INTO group_posts(storyid, groupid) VALUES (LAST_INSERT_ID(), $groupID)";
+        // $data = array('authorid' => $authorID, 'content' => $content);
+        // $this->db->insert('stories',$data);
+        // $temp = $this->db->affected_rows();
+        // $newstoryID = $this->db->insert_id();
 
-        $data = array('storyid' => $newstoryID, 'groupid' => $groupID);
-        $this->db->insert('group_posts',$data);
-        $temp = $temp + $this->db->affected_rows();
+        // $data = array('storyid' => $newstoryID, 'groupid' => $groupID);
+        // $this->db->insert('group_posts',$data);
+        // $temp = $temp + $this->db->affected_rows();
 
-        if($temp == 2)
-            return true;
-        else
-            return false;
+        // if($temp == 2)
+        //     return true;
+        // else
+        //     return false;
+        $this->db->trans_start();
+        $this->db->query($query1);
+        $this->db->query($query2);
+        $this->db->trans_complete();
+        return $this->db->trans_status();
     }
 
     function addComment($authorID, $storyID, $comment){
@@ -81,18 +88,18 @@ class Story_m extends CI_Model {
     function deleteStory($storyid){
     //remove story and all related data from stories, group_posts, story_likes and story_comments
 
-        $this->db->delete('group_posts', array('storyid' => $storyid));
-        $temp1 = $this->db->affected_rows();
+        // $this->db->delete('group_posts', array('storyid' => $storyid));
+        // $temp1 = $this->db->affected_rows();
 
-        $this->db->delete('story_likes', array('storyid' => $storyid));
-        $temp2 = $this->db->affected_rows();
+        // $this->db->delete('story_likes', array('storyid' => $storyid));
+        // $temp2 = $this->db->affected_rows();
 
-        $this->db->delete('comments', array('storyid' => $storyid));
-        $temp3 = $this->db->affected_rows();        
+        // $this->db->delete('comments', array('storyid' => $storyid));
+        // $temp3 = $this->db->affected_rows();        
 
         //delete this entry in the end due to foreign key contraints
         $this->db->delete('stories', array('id' => $storyid));
-        $temp4 = $this->db->affected_rows();
+        $temp1 = $this->db->affected_rows();
 
         //HOW TO CHECK WHETHER ALL LIKES AND COMMENTS WERE DELETED?
         //there may be no likes or comments (temp3 = 0 or temp4 = 0)
