@@ -61,20 +61,21 @@ class Story_m extends CI_Model {
             return false;  
     }
 
-    // //Shows how to get data from db using Active Record queries
-    // function getLikes($storyID){
-    // //return an array
-    //     $this->db->select('userid,  time')->where('storyid',$storyID)->from('story_likes');
-    //     return $this->db->get()->result();
-    // }
+    //Shows how to get data from db using Active Record queries
+    function getLikes($storyID){
+    //return an array
+        $query = "SELECT fname, lname, userid, image FROM story_likes, users WHERE story_likes.storyid = $storyID AND story_likes.userid = users.id";
+        $res = $this->db->query($query);
+        return $res->result();
+    }
 
-    // //Shows how to get data from db using simple queries
-    // function getComments($storyID){
-    // //return an array
-    //     $query = "SELECT userid, comment, time FROM story_comments WHERE storyid = $storyID";
-    //     $res = $this->db->query($query);
-    //     return $res->result();
-    // }
+    //Shows how to get data from db using simple queries
+    function getComments($storyID){
+    //return an array
+        $query = "SELECT comments.id AS id, authorid, fname, lname, content, comments.time AS time FROM comments, users WHERE comments.storyid = $storyID AND comments.authorid = users.id";
+        $res = $this->db->query($query);
+        return $res->result();
+    }
 
     //TRANSACTION NEEDED
     function deleteStory($storyid){
@@ -97,7 +98,7 @@ class Story_m extends CI_Model {
         //there may be no likes or comments (temp3 = 0 or temp4 = 0)
         //READ DB AND CHECK WHETHER THERE ARE ANY LIKES/COMMENTS
 
-        if($temp1 > 0 and $temp2 > 0)
+        if($temp1 > 0 )
             return true;
         else
             return false;

@@ -41,6 +41,15 @@ class User_m extends CI_Model {
         return $res->result();
     }
 
+    function getFriendRequests($userID){ 
+    //return all friends records
+        $subquery1 = "SELECT * FROM friendship,users WHERE user1accept = 1 and user2accept = 0 and user2id = $userID and user1id = users.id";
+        $subquery2 = "SELECT * FROM friendship,users WHERE user1accept = 0 and user2accept = 1 and user1id = $userID and user2id = users.id";
+        $query = "$subquery1 UNION $subquery2";
+        $res = $this->db->query($query);
+        return $res->result();
+    }
+
     function addFriend($userID, $friendID){
     // keep in mind $user1id < $user2id in friendship
     // check whether $friendID has already sent a friend request to userID
@@ -99,6 +108,7 @@ class User_m extends CI_Model {
                     return false;
             }
         }
+        return false;
     }
 
     function checkLogin($username, $password){
@@ -118,28 +128,22 @@ class User_m extends CI_Model {
     }
 
     function checkIfFriends($user1id, $user2id){
-    //return true if the two users are friends, false otherwise
+    //return the row in frndship table
         if ($user1id < $user2id) {
-            $query = "SELECT * FROM friendship WHERE user1id = $user1id and user2id = $user2id and user1accept = 1 and user2accept = 1";
+            $query = "SELECT * FROM friendship WHERE user1id = $user1id and user2id = $user2id";
         } else {
-            $query = "SELECT * FROM friendship WHERE user1id = $user2id and user2id = $user1id and user1accept = 1 and user2accept = 1";
+            $query = "SELECT * FROM friendship WHERE user1id = $user2id and user2id = $user1id";
         }
         
         $res = $this->db->query($query);
-        $temp = $res->result();
-        if (count($temp) > 0) {
-            //There exists a record indicating that the two users are friends
-            return true;
-        } else {
-            return false;
-        }
+        return $res->result();
         
     }
     function getFeed($userID){
     //return all visible posts to user, that is, posts in all groups that he is in
     //also need to return the comments and likes associated with each of the stories
         $subquery = "SELECT groupID FROM group_members WHERE memberID = $userID";
-        $query = "SELECT * FROM group_posts,stories WHERE stories.id = group_posts.storyid and group_posts.groupid in ($subquery) ORDER BY stories.time DESC";
+        $query = "SELECT *, stories.time AS time FROM group_posts,stories,users WHERE stories.id = group_posts.storyid and users.id = stories.authorid and group_posts.groupid in ($subquery) ORDER BY stories.time DESC";
         $res = $this->db->query($query);
         return $res->result();
     }
@@ -161,9 +165,29 @@ class User_m extends CI_Model {
     }
 
     function updateDetails($fname ,  $lname , $dob , $gender , $email, $userid){
-        $data = array('fname' => $fname, 'lname' => $lname, 'dob' => $dob, 'gender' => $gender, 'email' => $email);
+        $data = array();
+        if(count($fname))
+            $data['fname'] = $fname;
+        if(count($lname))
+            $data['lname'] = $lname;
+        if(count($dob))
+            $data['dob'] = $dob;
+        if(count($gender))
+            $data['gender'] = $gender;
+        if(count($email))
+            $data['email'] = $email;
+        // $data = array('fname' => $fname, 'lname' => $lname, 'dob' => $dob, 'gender' => $gender, 'email' => $email);
         $this->db->update('users',$data,array('id' => $userid));
         
+        if($this->db->affected_rows())
+            return true;
+        else
+            return false;
+    }
+    function updatePic($userid, $filename){
+        $data = array('image' => '/connectify/images/'.$filename);
+        $this->db->update('users',$data,array('id' => $userid));
+        return true;
         if($this->db->affected_rows())
             return true;
         else
@@ -173,6 +197,12 @@ class User_m extends CI_Model {
     function getDetails($userid){
     //return user details
         $query = "SELECT * FROM users WHERE id = $userid";
+        $res = $this->db->query($query);
+        return $res->result();
+    }
+    function getDetailsUsername($username){
+    //return user details
+        $query = "SELECT * FROM users WHERE username = '$username'";
         $res = $this->db->query($query);
         return $res->result();
     }

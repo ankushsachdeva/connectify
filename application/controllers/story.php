@@ -22,10 +22,16 @@ class Story extends MY_Controller {
 			redirect($this->agent->referrer().'#failed');
 
 	}
+	public function deleteComment(){
+		$this->isLoggedin();
+		$commentid = $this->input->post('commentid');
+		$res = $this->Story->deleteComment($commentid);
+		$this->feedback($res);
+	}
 	public function deleteStory(){
 		$this->isLoggedin();
 		$storyid= $this->input->post('storyid');
-		$res = $this->Story->deleteStroy($storyid);
+		$res = $this->Story->deleteStory($storyid);
 		if($res)
 			redirect($this->agent->referrer().'#success');
 		else
@@ -35,12 +41,19 @@ class Story extends MY_Controller {
 		$this->isLoggedin();
 		$content = $this->input->post('content');
 		$groupid = $this->input->post('groupid');
-		$authorid = $this->session->userdata('userid');
+		$authorid = $this->session->userdata('id');
 		$res = $this->Story->addStory($authorid, $content, $groupid);
 		if($res)
 			redirect('group/show/'.$groupid.'#success');
 		else
 			redirect('group/show/'.$groupid.'#failed');
+	}
+	public function likestory(){
+		$this->isLoggedin();
+		$storyid = $this->input->post('storyid');
+		$res = $this->Story->likeStory($storyid, $this->session->userdata('userid'));
+		$this->feedback($res, $this->session->userdata('userid'));
+
 	}
 	
 }

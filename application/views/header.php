@@ -18,6 +18,7 @@
     <!-- siimple style -->
     <link href="<?php echo base_url('assets/css/style.css')?>" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap-multiselect.css')?>" type="text/css"/>
+    <link href="<?php echo base_url('assets/css/jasny-bootstrap.min.css')?>" rel="stylesheet" media="screen">
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -43,7 +44,8 @@
             <?if(isset($loggedin) && $loggedin != false){?>
             <li><a href="<?echo site_url('user/search')?>">Search</a></li>
             <li><a href="<?echo site_url('user/pendingrequests')?>">Requests</a></li>
-            <li><a href="<?echo site_url('user/profile')?>">Profile</a></li>
+            <li><a href="<?echo site_url('user/update')?>">Update Profile</a></li>
+            <li><a href="<?echo site_url('user/profile')?>">View Profile</a></li>
             <li><a href="<?echo site_url('user/friends')?>">Friends</a></li>
             <li><a href="<?echo site_url('group/showall')?>">Groups</a></li>
             <li><a href='<? echo site_url('user/logout')?>'>Sign out</a></li> 

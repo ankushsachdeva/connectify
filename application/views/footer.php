@@ -14,10 +14,12 @@
     <script src="<?php echo base_url('assets/js/bootstrap.min.js')?>"></script>
     <script src="<?php echo base_url('assets/js/bootstrap-datepicker.js')?>"></script>
     <script type="text/javascript" src="<?php echo base_url('assets/js/bootstrap-multiselect.js')?>"></script>
+    <script src="<?php echo base_url('assets/js/jasny-bootstrap.min.js')?>"></script>
 	<script>
 		 $(document).ready(function() {
 			$('.multiselect').multiselect();
-			$('.bday').datepicker();
+			$('.bday').datepicker({format:'yyyy/mm/dd'});
+			$('.fileinput').fileinput()
 			$(location.hash).show();
 
 		});
